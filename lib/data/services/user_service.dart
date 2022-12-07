@@ -1,4 +1,3 @@
-import 'package:post_gram_ui/data/clients/api_client.dart';
 import 'package:post_gram_ui/domain/models/subscription/subscription_model.dart';
 import 'package:post_gram_ui/domain/repository/api_repository_base.dart';
 import 'package:post_gram_ui/internal/dependencies/repository_module.dart';
@@ -11,7 +10,6 @@ class UserService {
   }
 
   Future<List<SubscriptionModel>> getSlaveSubscriptions() async {
-    var a = await _apiRepository.getSlaveSubscriptions();
-    return a; //TODO
+    return await _apiRepository.getSlaveSubscriptions();
   }
 }

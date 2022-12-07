@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:post_gram_ui/data/services/attachment_service.dart';
-import 'package:post_gram_ui/data/services/auth_service.dart';
+import 'package:post_gram_ui/domain/models/attachment/attachment_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
 import 'package:post_gram_ui/internal/configs/shared_preferences_helper.dart';
 import 'package:post_gram_ui/ui/app_navigator.dart';
@@ -8,27 +8,25 @@ import 'package:provider/provider.dart';
 
 class _ViewModel extends ChangeNotifier {
   BuildContext context;
-  // final AuthService _authService = AuthService();
+  String _name = "";
+  NetworkImage? _avater;
   final AttachmentService _attachmentService = AttachmentService();
-
   _ViewModel({required this.context}) {
     _asyncInit();
   }
 
-  UserModel? _user;
-  UserModel? get user => _user;
-  set user(UserModel? val) {
-    _user = val;
+  void _asyncInit() async {
+    UserModel? user = await SharedPreferencesHelper.getStoredUser();
+    if (user != null) {
+      _name = "${user.name} (${user.nickname})";
+
+      AttachmentModel? avatarL = user.avatar;
+      if (avatarL != null) {
+        _avater = await _attachmentService.getAttachment(avatarL.link);
+      }
+    }
     notifyListeners();
   }
-
-  void _asyncInit() async {
-    user = await SharedPreferencesHelper.getStoredUser();
-  }
-
-  // void _logout() async {
-  //   await _authService.logout().then((value) => AppNavigator.toLoader());
-  // }
 
   void _profile() {
     AppNavigator.toProfile();
@@ -41,23 +39,14 @@ class AppMainWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _ViewModel viewModel = context.watch<_ViewModel>();
-    //TODO убрать знаки вопроса
-    NetworkImage? avatar = viewModel._attachmentService
-        .getAttachment(viewModel._user?.avatar?.link);
     return Scaffold(
         appBar: AppBar(
           leading: Padding(
             padding: const EdgeInsets.all(4),
-            child: CircleAvatar(backgroundImage: avatar),
+            child: CircleAvatar(backgroundImage: viewModel._avater),
           ),
-          title: Text(viewModel._user?.name == null
-              ? "null"
-              : viewModel._user!.name.toString()),
+          title: Text(viewModel._name),
           actions: [
-            // IconButton(
-            //   icon: const Icon(Icons.logout),
-            //   onPressed: viewModel._logout,
-            // ),
             IconButton(
                 onPressed: viewModel._profile,
                 icon: const Icon(Icons.account_box))
