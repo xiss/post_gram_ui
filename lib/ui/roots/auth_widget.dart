@@ -9,12 +9,16 @@ class _ViewModelState {
   final String? password;
   final bool isLoading;
   final String? errorText;
+  final String? errorLogin;
+  final String? errorPassword;
 
   const _ViewModelState({
     this.login,
     this.password,
     this.isLoading = false,
     this.errorText,
+    this.errorLogin,
+    this.errorPassword,
   });
 
   _ViewModelState copyWith({
@@ -22,12 +26,16 @@ class _ViewModelState {
     String? password,
     bool? isLoading = false,
     String? errorText,
+    String? errorLogin,
+    String? errorPassword,
   }) {
     return _ViewModelState(
       login: login ?? this.login,
       password: password ?? this.password,
       isLoading: isLoading ?? this.isLoading,
-      errorText: errorText ?? this.errorText,
+      errorText: errorText,
+      errorLogin: errorLogin,
+      errorPassword: errorPassword,
     );
   }
 }
@@ -64,17 +72,16 @@ class _ViewModel extends ChangeNotifier {
 
   void login() async {
     state = state.copyWith(isLoading: true);
-//TODO надо блокировать интерфейс на время ожидания ответа
     try {
       await _authService
           .auth(state.login, state.password)
           .then((value) => AppNavigator.toLoader());
     } on WrongCredentionalPostGramException {
-      state = state.copyWith(errorText: "Incorrect password");
+      state = state.copyWith(errorPassword: "Incorrect password");
     } on NoNetworkPostGramException {
       state = state.copyWith(errorText: "Not network connection");
     } on NotFoundPostGramException {
-      state = state.copyWith(errorText: "Login not found");
+      state = state.copyWith(errorLogin: "Login not found");
     } catch (e) {
       state = state.copyWith(errorText: "Internal error");
     }
@@ -97,15 +104,25 @@ class AuthWidget extends StatelessWidget {
             children: [
               TextField(
                 controller: viewModel.loginController,
-                decoration: const InputDecoration(hintText: "Enter Login"),
+                enabled: !viewModel.state.isLoading,
+                decoration: InputDecoration(
+                  hintText: "Enter Login",
+                  errorText: viewModel.state.errorLogin,
+                ),
               ),
               TextField(
                   controller: viewModel.passwordController,
                   obscureText: true,
-                  decoration:
-                      const InputDecoration(hintText: "Enter Password")),
+                  enabled: !viewModel.state.isLoading,
+                  decoration: InputDecoration(
+                    hintText: "Enter Password",
+                    errorText: viewModel.state.errorPassword,
+                  )),
               ElevatedButton(
-                  onPressed: viewModel.checkFields() ? viewModel.login : null,
+                  onPressed:
+                      viewModel.checkFields() && !viewModel.state.isLoading
+                          ? viewModel.login
+                          : null,
                   child: const Text("Login")),
               if (viewModel.state.isLoading) const CircularProgressIndicator(),
               if (viewModel.state.errorText != null)
