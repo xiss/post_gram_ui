@@ -39,6 +39,7 @@ class AuthService {
   }
 
   Future<bool> checkAuth() async {
+    //TODO надо проверить токен передд тем как его отдавать
     return (await TokenStorage.getSecurityToken()) != null &&
         (await SharedPreferencesHelper.getStoredUser() != null);
   }

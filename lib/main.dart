@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:post_gram_ui/ui/app_navigator.dart';
-import 'package:post_gram_ui/ui/roots/loader_widget.dart';
+import 'package:post_gram_ui/ui/roots/loader/loader_widget.dart';
 
 void main() {
   runApp(const PostGram());

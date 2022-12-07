@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:post_gram_ui/ui/roots/app_main.dart';
-import 'package:post_gram_ui/ui/roots/auth_widget.dart';
-import 'package:post_gram_ui/ui/roots/loader_widget.dart';
-import 'package:post_gram_ui/ui/roots/profile_widget.dart';
+import 'package:post_gram_ui/ui/roots/app_main/main_widget.dart';
+import 'package:post_gram_ui/ui/roots/auth/auth_widget.dart';
+import 'package:post_gram_ui/ui/roots/loader/loader_widget.dart';
+import 'package:post_gram_ui/ui/roots/profile/profile_widget.dart';
 
 class NavigationRoutes {
   static const String loaderWidget = "/";
@@ -43,7 +43,7 @@ class AppNavigator {
             pageBuilder: ((_, __, ___) => AuthWidget.create()));
       case NavigationRoutes.main:
         return PageRouteBuilder(
-            pageBuilder: ((_, __, ___) => AppMainWidget.create()));
+            pageBuilder: ((_, __, ___) => MainWidget.create()));
       case NavigationRoutes.profile:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => ProfileWidget.create());
