@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:post_gram_ui/domain/models/auth/refresh_token_request_model.dart';
 import 'package:post_gram_ui/domain/models/auth/token_request_model.dart';
 import 'package:post_gram_ui/domain/models/auth/token_response.dart';
+import 'package:post_gram_ui/domain/models/user/user_create_model.dart';
 import 'package:retrofit/http.dart';
 part 'auth_client.g.dart';
 
@@ -15,4 +16,7 @@ abstract class AuthClient {
   @POST("/api/Auth/RefreshToken")
   Future<TokenResponseModel?> getTokenByRefreshToken(
       @Body() RefreshTokenRequestModel refreshToken);
+
+  @POST("/api/Auth/RegisterUser")
+  Future<dynamic> registerUser(@Body() UserCreateModel model);
 }
