@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:post_gram_ui/data/services/database.dart';
 import 'package:post_gram_ui/ui/app_navigator.dart';
 import 'package:post_gram_ui/ui/roots/loader/loader_widget.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Database.initialize();
   runApp(const PostGram());
 }
 
