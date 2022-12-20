@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:post_gram_ui/domain/exceptions.dart';
 import 'package:post_gram_ui/domain/models/auth/token_response.dart';
+import 'package:post_gram_ui/domain/models/user/user_create_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
 import 'package:post_gram_ui/domain/repository/api_repository_base.dart';
 import 'package:post_gram_ui/internal/configs/shared_preferences_helper.dart';
@@ -25,26 +26,52 @@ class AuthService {
         }
       } on DioError catch (e) {
         if (e.error is SocketException) {
-          throw NoNetworkPostGramException();
+          throw const NoNetworkPostGramException();
         } else if (e.response?.statusCode == 401 ||
             e.response?.statusCode == 403) {
-          throw WrongCredentionalPostGramException();
+          throw const WrongCredentionalPostGramException();
         } else if (e.response?.statusCode == 404) {
-          throw NotFoundPostGramException();
+          throw const NotFoundPostGramException();
         }
       } catch (e) {
-        throw InternalServerPostGramException();
+        throw const InternalServerPostGramException();
       }
     }
   }
 
   Future<bool> checkAuth() async {
-    //TODO надо проверить токен передд тем как его отдавать
-    return (await TokenStorage.getSecurityToken()) != null &&
-        (await SharedPreferencesHelper.getStoredUser() != null);
+    bool result = false;
+    if ((await TokenStorage.getSecurityToken()) != null) {
+      UserModel? user = await _apiRepository.getCurrentUser();
+      if (user != null) {
+        await SharedPreferencesHelper.setStoredUser(user);
+        result = true;
+      }
+    }
+    return result;
   }
 
   Future logout() async {
     await TokenStorage.setStoredToken(null);
+  }
+
+  Future<dynamic> registerUser(UserCreateModel model) async {
+    try {
+      return await _apiRepository.registerUser(model);
+    } on DioError catch (e) {
+      if (e.error is SocketException) {
+        throw const NoNetworkPostGramException();
+      } else if (e.response?.statusCode == 401 ||
+          e.response?.statusCode == 403) {
+        throw const WrongCredentionalPostGramException();
+      } else if (e.response?.statusCode == 404) {
+        throw const NotFoundPostGramException();
+      } else if (e.response?.statusCode == 400 &&
+          e.response?.data['errors'] != null) {
+        throw ValidationPostGramException(e.response?.data);
+      }
+    } catch (e) {
+      throw const InnerPostGramException();
+    }
   }
 }
