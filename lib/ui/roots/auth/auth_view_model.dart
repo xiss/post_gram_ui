@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:post_gram_ui/data/services/auth_service.dart';
+import 'package:post_gram_ui/data/services/database_service.dart';
 import 'package:post_gram_ui/domain/exceptions.dart';
 import 'package:post_gram_ui/ui/app_navigator.dart';
 import 'package:post_gram_ui/ui/roots/auth/auth_view_model_state.dart';
@@ -37,6 +38,7 @@ class AuthViewModel extends ChangeNotifier {
   void login() async {
     state = state.copyWith(isLoading: true);
     try {
+      await DatabaseService().clearDatabase();
       await _authService
           .auth(state.login, state.password)
           .then((value) => AppNavigator.toLoader());

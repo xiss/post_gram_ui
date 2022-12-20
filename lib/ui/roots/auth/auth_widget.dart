@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:post_gram_ui/ui/app_navigator.dart';
 import 'package:post_gram_ui/ui/roots/auth/auth_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -25,19 +26,28 @@ class AuthWidget extends StatelessWidget {
                 ),
               ),
               TextField(
-                  controller: viewModel.passwordController,
-                  obscureText: true,
-                  enabled: !viewModel.state.isLoading,
-                  decoration: InputDecoration(
-                    hintText: "Enter Password",
-                    errorText: viewModel.state.errorPassword,
-                  )),
+                controller: viewModel.passwordController,
+                obscureText: true,
+                enabled: !viewModel.state.isLoading,
+                decoration: InputDecoration(
+                  hintText: "Enter Password",
+                  errorText: viewModel.state.errorPassword,
+                ),
+              ),
+
+              //login button
               ElevatedButton(
-                  onPressed:
-                      viewModel.checkFields() && !viewModel.state.isLoading
-                          ? viewModel.login
-                          : null,
-                  child: const Text("Login")),
+                onPressed: viewModel.checkFields() && !viewModel.state.isLoading
+                    ? viewModel.login
+                    : null,
+                child: const Text("Login"),
+              ),
+
+              //registration button
+              const ElevatedButton(
+                onPressed: AppNavigator.toRegistration,
+                child: Text("Registration"),
+              ),
               if (viewModel.state.isLoading) const CircularProgressIndicator(),
               if (viewModel.state.errorText != null)
                 Text(

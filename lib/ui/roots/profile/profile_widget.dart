@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:post_gram_ui/ui/roots/profile/profile_view_model.dart';
-import 'package:post_gram_ui/ui/styles/font_styles.dart';
+import 'package:post_gram_ui/ui/common/styles/font_styles.dart';
 import 'package:provider/provider.dart';
 
 class ProfileWidget extends StatelessWidget {
@@ -11,12 +11,15 @@ class ProfileWidget extends StatelessWidget {
     ProfileViewModel viewModel = context.watch<ProfileViewModel>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Profile"), actions: [
-        IconButton(
-          icon: const Icon(Icons.logout),
-          onPressed: viewModel.logout,
-        ),
-      ]),
+      appBar: AppBar(
+        title: const Text("Profile"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: viewModel.logout,
+          ),
+        ],
+      ),
       body: Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.fill,
         children: [
@@ -26,12 +29,12 @@ class ProfileWidget extends StatelessWidget {
                 verticalAlignment: TableCellVerticalAlignment.top,
                 child: Padding(
                   padding: const EdgeInsets.all(5),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.black,
-                    radius: 80,
+                  child: GestureDetector(
+                    onTap: viewModel.changePhoto,
+                    //avatar
                     child: CircleAvatar(
                       backgroundImage: viewModel.avatar,
-                      radius: 78,
+                      radius: 80,
                     ),
                   ),
                 ),
@@ -40,16 +43,27 @@ class ProfileWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(viewModel.fullName,
-                      style: FontStyles.getProfileTextStyle()),
-                  Text(viewModel.eMail,
-                      style: FontStyles.getProfileTextStyle()),
-                  Text(viewModel.birthDate,
-                      style: FontStyles.getProfileTextStyle()),
-                  Text(viewModel.folowers,
-                      style: FontStyles.getProfileTextStyle()),
-                  Text(viewModel.subscriptions,
-                      style: FontStyles.getProfileTextStyle()),
+                  //text details
+                  Text(
+                    viewModel.fullName,
+                    style: FontStyles.getHeaderTextStyle(),
+                  ),
+                  Text(
+                    viewModel.eMail,
+                    style: FontStyles.getHeaderTextStyle(),
+                  ),
+                  Text(
+                    viewModel.birthDate,
+                    style: FontStyles.getHeaderTextStyle(),
+                  ),
+                  Text(
+                    viewModel.followers,
+                    style: FontStyles.getHeaderTextStyle(),
+                  ),
+                  Text(
+                    viewModel.subscriptions,
+                    style: FontStyles.getHeaderTextStyle(),
+                  ),
                 ],
               ),
             ],

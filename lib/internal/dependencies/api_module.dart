@@ -41,10 +41,8 @@ class ApiModule {
             }
           } catch (e) {
             AuthService authService = AuthService();
-            if (await authService.checkAuth()) {
-              await authService.logout();
-              AppNavigator.toLoader();
-            }
+            await authService.logout();
+            await AppNavigator.toLoader();
             return handler
                 .resolve(Response(requestOptions: options, statusCode: 400));
           }
