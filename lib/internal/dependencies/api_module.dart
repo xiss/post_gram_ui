@@ -6,7 +6,7 @@ import 'package:post_gram_ui/domain/models/auth/refresh_token_request_model.dart
 import 'package:post_gram_ui/domain/models/auth/token_response.dart';
 import 'package:post_gram_ui/internal/configs/app_config.dart';
 import 'package:post_gram_ui/internal/configs/token_storage.dart';
-import 'package:post_gram_ui/ui/app_navigator.dart';
+import 'package:post_gram_ui/ui/navigation/app_navigator.dart';
 
 class ApiModule {
   static AuthClient? _authClient;
