@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:post_gram_ui/ui/widgets/roots/create_post/create_post_view_model.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +38,7 @@ class CreatePostWidget extends StatelessWidget {
                   ),
                   sizedBoxSpace,
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ElevatedButton(
                         onPressed: viewModel.checkFields() &&

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:camera/camera.dart';
@@ -34,7 +35,7 @@ class _CameraWidgetState extends State<CameraWidget> {
 
   @override
   Widget build(BuildContext context) {
-    bool isTakingPhoto = false;
+    Future<bool> isTakingPhoto = Future.value(false);
     if (!(controller?.value.isInitialized ?? false)) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -78,19 +79,18 @@ class _CameraWidgetState extends State<CameraWidget> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: IconButton(
-                      icon: const Icon(
-                        Icons.photo_camera,
-                        color: Colors.white,
-                      ),
-                      onPressed: isTakingPhoto // TODO это не работает
-                          ? null
-                          : () async {
-                              isTakingPhoto = true;
-                              XFile photo = await controller!.takePicture();
-                              widget.onFile(File(photo.path));
-                              isTakingPhoto = false;
-                            },
-                    ),
+                        icon: const Icon(
+                          Icons.photo_camera,
+                          color: Colors.white,
+                        ),
+                        onPressed: () async {
+                          if (!await isTakingPhoto) {
+                            isTakingPhoto = Future.value(true);
+                            XFile photo = await controller!.takePicture();
+                            widget.onFile(File(photo.path));
+                            isTakingPhoto = Future.value(false);
+                          }
+                        }),
                   ),
                 )
               ],
