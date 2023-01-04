@@ -21,7 +21,9 @@ PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
       content: (json['content'] as List<dynamic>)
           .map((e) => AttachmentModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      isLikedByUser: json['isLikedByUser'] as bool?,
+      likeByUser: json['likeByUser'] == null
+          ? null
+          : LikeModel.fromJson(json['likeByUser'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
@@ -34,6 +36,6 @@ Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
       'likeCount': instance.likeCount,
       'dislikeCount': instance.dislikeCount,
       'commentCount': instance.commentCount,
-      'isLikedByUser': instance.isLikedByUser,
+      'likeByUser': instance.likeByUser,
       'content': instance.content,
     };

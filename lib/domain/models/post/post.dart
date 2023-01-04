@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:post_gram_ui/domain/models/db_model_base.dart';
 import 'package:post_gram_ui/domain/models/post/post_model.dart';
-import 'package:post_gram_ui/helpers/converter.dart';
 
 part 'post.g.dart';
 
@@ -17,7 +16,8 @@ class Post implements DbModelBase {
   final int likeCount;
   final int dislikeCount;
   final int commentCount;
-  final bool? isLikedByUser;
+  String? likeByUserId;
+
   Post({
     this.authorId,
     required this.id,
@@ -28,7 +28,7 @@ class Post implements DbModelBase {
     required this.likeCount,
     required this.dislikeCount,
     required this.commentCount,
-    this.isLikedByUser,
+    this.likeByUserId,
   });
 
   @override
@@ -49,7 +49,7 @@ class Post implements DbModelBase {
       likeCount: map['likeCount'] as int,
       dislikeCount: map['dislikeCount'] as int,
       commentCount: map['commentCount'] as int,
-      isLikedByUser: Converter.intToBool(map['isLikedByUser'] as int?),
+      likeByUserId: map['likeByUserId'] as String?,
     );
   }
 
@@ -60,6 +60,7 @@ class Post implements DbModelBase {
   factory Post.fromModel(PostModel model) {
     Post result = _$PostFromJson(model.toJson());
     result.authorId = model.author.id;
+    result.likeByUserId = model.likeByUser?.id;
     return result;
   }
 

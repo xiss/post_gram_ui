@@ -1,6 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:post_gram_ui/domain/models/attachment/attachment_model.dart';
 import 'package:post_gram_ui/domain/models/attachment/post_content.dart';
+import 'package:post_gram_ui/domain/models/like/like.dart';
+import 'package:post_gram_ui/domain/models/like/like_model.dart';
 import 'package:post_gram_ui/domain/models/post/post.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
 
@@ -17,7 +19,7 @@ class PostModel {
   final int likeCount;
   final int dislikeCount;
   final int commentCount;
-  final bool? isLikedByUser;
+  final LikeModel? likeByUser;
   List<AttachmentModel> content;
 
   PostModel({
@@ -31,7 +33,7 @@ class PostModel {
     required this.dislikeCount,
     required this.commentCount,
     required this.content,
-    required this.isLikedByUser,
+    required this.likeByUser,
   });
 
   factory PostModel.fromJson(Map<String, dynamic> json) {
@@ -39,7 +41,11 @@ class PostModel {
   }
 
   factory PostModel.fromEntity(
-      Post entity, UserModel author, List<PostContent> content) {
+    Post entity,
+    UserModel author,
+    List<PostContent> content,
+    Like? likeByUser,
+  ) {
     return PostModel(
         author: author,
         id: entity.id,
@@ -49,7 +55,8 @@ class PostModel {
         likeCount: entity.likeCount,
         dislikeCount: entity.dislikeCount,
         commentCount: entity.commentCount,
-        isLikedByUser: entity.isLikedByUser,
+        likeByUser:
+            likeByUser == null ? null : LikeModel.fromEntity(likeByUser),
         edited: entity.edited,
         content:
             content.map((e) => AttachmentModel.fromPostContent(e)).toList());

@@ -10,6 +10,24 @@ class ProfileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ProfileViewModel viewModel = context.watch<ProfileViewModel>();
 
+//TODO
+    if (viewModel.error != null) {
+      //viewModel.error = null;
+      return AlertDialog(
+        title: const Text('Message'),
+        content: const Text('Your file is saved.'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pop(); // dismisses only the dialog and returns nothing
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
@@ -43,6 +61,7 @@ class ProfileWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  //viewModel.error != null? AlertDialog():null,
                   //text details
                   Text(
                     viewModel.fullName,

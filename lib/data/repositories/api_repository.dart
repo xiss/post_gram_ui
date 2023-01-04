@@ -6,18 +6,25 @@ import 'package:post_gram_ui/domain/models/attachment/metadata_model.dart';
 import 'package:post_gram_ui/domain/models/auth/refresh_token_request_model.dart';
 import 'package:post_gram_ui/domain/models/auth/token_request_model.dart';
 import 'package:post_gram_ui/domain/models/auth/token_response.dart';
+import 'package:post_gram_ui/domain/models/comment/comment_model.dart';
+import 'package:post_gram_ui/domain/models/comment/create_comment_model.dart';
+import 'package:post_gram_ui/domain/models/comment/update_comment_model.dart';
+import 'package:post_gram_ui/domain/models/like/create_like_model.dart';
+import 'package:post_gram_ui/domain/models/like/like_model.dart';
+import 'package:post_gram_ui/domain/models/like/update_like_model.dart';
 import 'package:post_gram_ui/domain/models/post/create_post_model.dart';
 import 'package:post_gram_ui/domain/models/post/post_model.dart';
+import 'package:post_gram_ui/domain/models/post/update_post_model.dart';
 import 'package:post_gram_ui/domain/models/subscription/subscription_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_create_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
 import 'package:post_gram_ui/domain/repository/api_repository_base.dart';
 
-class ApiDataRepository extends ApiRepositoryBase {
+class ApiRepository extends ApiRepositoryBase {
   final AuthClient _authClient;
   final ApiClient _apiClient;
 
-  ApiDataRepository(this._authClient, this._apiClient);
+  ApiRepository(this._authClient, this._apiClient);
 
   @override
   Future<TokenResponseModel?> getToken({
@@ -86,5 +93,46 @@ class ApiDataRepository extends ApiRepositoryBase {
   @override
   Future<String> createPost({required CreatePostModel model}) async {
     return await _apiClient.createPost(model: model);
+  }
+
+  @override
+  Future<String> createLike({required CreateLikeModel model}) async {
+    return await _apiClient.createLike(model: model);
+  }
+
+  @override
+  Future<List<CommentModel>> getCommentsForPost(String postId) {
+    return _apiClient.getCommentsForPost(postId);
+  }
+
+  @override
+  Future<String> createComment({required CreateCommentModel model}) async {
+    return await _apiClient.createComment(model: model);
+  }
+
+  @override
+  Future<CommentModel> updateComment(
+      {required UpdateCommentModel model}) async {
+    return await _apiClient.updateComment(model: model);
+  }
+
+  @override
+  Future<LikeModel> updateLike({required UpdateLikeModel model}) async {
+    return await _apiClient.updateLike(model: model);
+  }
+
+  @override
+  Future<PostModel> updatePost({required UpdatePostModel model}) async {
+    return await _apiClient.updatePost(model: model);
+  }
+
+  @override
+  Future<String> deleteComment({required String commentId}) async {
+    return await _apiClient.deleteComment(commentId: commentId);
+  }
+
+  @override
+  Future<String> deletePost({required String postId}) async {
+    return await _apiClient.deletePost(postId: postId);
   }
 }

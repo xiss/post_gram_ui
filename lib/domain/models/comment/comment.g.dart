@@ -8,26 +8,30 @@ part of 'comment.dart';
 
 Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       id: json['id'] as String,
-      author: UserModel.fromJson(json['author'] as Map<String, dynamic>),
+      authorId: json['authorId'] as String?,
       postId: json['postId'] as String,
-      created: json['created'] as String,
-      edited: json['edited'] as String,
+      created: DateTime.parse(json['created'] as String),
+      edited: json['edited'] == null
+          ? null
+          : DateTime.parse(json['edited'] as String),
       body: json['body'] as String,
       likeCount: json['likeCount'] as int,
       dislikeCount: json['dislikeCount'] as int,
-      quotedCommentId: json['quotedCommentId'] as String,
-      quotedText: json['quotedText'] as String,
+      quotedCommentId: json['quotedCommentId'] as String?,
+      quotedText: json['quotedText'] as String?,
+      likeByUserId: json['likeByUserId'] as String?,
     );
 
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'id': instance.id,
-      'author': instance.author,
+      'authorId': instance.authorId,
       'postId': instance.postId,
-      'created': instance.created,
-      'edited': instance.edited,
+      'created': instance.created.toIso8601String(),
+      'edited': instance.edited?.toIso8601String(),
       'body': instance.body,
       'likeCount': instance.likeCount,
       'dislikeCount': instance.dislikeCount,
       'quotedCommentId': instance.quotedCommentId,
       'quotedText': instance.quotedText,
+      'likeByUserId': instance.likeByUserId,
     };

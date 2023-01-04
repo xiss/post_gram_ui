@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS t_Posts
     likeCount int NOT NULL,
     dislikeCount int NOT NULL,
     commentCount int NOT NULL,
-    isLikedByUser bool,
+    likeByUserId text ,
     CONSTRAINT PK_Posts PRIMARY KEY (id),
     CONSTRAINT FK_Posts_Users_AuthorId FOREIGN KEY (authorId)
         REFERENCES t_Users (id) MATCH SIMPLE
@@ -71,7 +71,10 @@ CREATE TABLE IF NOT EXISTS t_Comments
     edited timestamp with time zone,
     postId text NOT NULL,
     authorId text NOT NULL,
+    likeByUserId text ,
     created timestamp with time zone NOT NULL,
+    likeCount int NOT NULL,
+    dislikeCount int NOT NULL,
     quotedCommentId text,
     quotedText text,
     CONSTRAINT PK_Comments PRIMARY KEY (id),
@@ -89,7 +92,7 @@ CREATE TABLE IF NOT EXISTS t_Comments
         ON DELETE CASCADE
 );
 
--- Table: Likes//TODO
+-- Table: Likes
 DROP TABLE IF EXISTS t_Likes;
 CREATE TABLE IF NOT EXISTS t_Likes
 (

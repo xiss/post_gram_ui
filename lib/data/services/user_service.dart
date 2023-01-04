@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:post_gram_ui/domain/exceptions.dart';
 import 'package:post_gram_ui/domain/models/subscription/subscription_model.dart';
+import 'package:post_gram_ui/domain/models/user/user_model.dart';
 import 'package:post_gram_ui/domain/repository/api_repository_base.dart';
+import 'package:post_gram_ui/internal/configs/shared_preferences_helper.dart';
 import 'package:post_gram_ui/internal/dependencies/repository_module.dart';
 
 class UserService {
@@ -31,5 +33,9 @@ class UserService {
     } catch (e) {
       throw const InnerPostGramException("Inner exeption");
     }
+  }
+
+  Future<UserModel?> getCurrentUser() async {
+    return await SharedPreferencesHelper.getStoredUser();
   }
 }

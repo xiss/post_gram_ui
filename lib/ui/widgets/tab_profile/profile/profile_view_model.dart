@@ -10,7 +10,6 @@ import 'package:post_gram_ui/domain/models/attachment/attachment_model.dart';
 import 'package:post_gram_ui/domain/models/attachment/metadata_model.dart';
 import 'package:post_gram_ui/domain/models/subscription/subscription_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
-import 'package:post_gram_ui/internal/configs/shared_preferences_helper.dart';
 import 'package:post_gram_ui/ui/navigation/app_navigator.dart';
 import 'package:post_gram_ui/ui/widgets/common/camera_widget.dart';
 
@@ -69,6 +68,7 @@ class ProfileViewModel extends ChangeNotifier {
         await _attachmentService.addAvatarToUser(model);
         await avatar?.evict();
         notifyListeners();
+        //throw Exception();
       } catch (e) {
         //TODO обработка ошибок
         error = "inner Exception";
@@ -81,7 +81,7 @@ class ProfileViewModel extends ChangeNotifier {
     try {
       slaveSubscriptions = await _userService.getSlaveSubscriptions();
       masterSubscriptions = await _userService.getMasterSubscriptions();
-      userL = await SharedPreferencesHelper.getStoredUser();
+      userL = await _userService.getCurrentUser();
     } on InnerPostGramException catch (e) {
       error = e.message;
     }

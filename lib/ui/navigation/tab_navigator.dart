@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:post_gram_ui/domain/enums/tab_item.dart';
 import 'package:post_gram_ui/ui/navigation/tab_enums.dart';
 import 'package:post_gram_ui/ui/navigation/tab_navigator_routes.dart';
+import 'package:post_gram_ui/ui/widgets/tab_home/create_comment/create_comment_widget.dart';
 import 'package:post_gram_ui/ui/widgets/tab_home/post_details/post_detail_widget.dart';
+import 'package:post_gram_ui/ui/widgets/tab_home/update_comment/update_comment_widget.dart';
 
 class TabNavigator extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -19,7 +21,11 @@ class TabNavigator extends StatelessWidget {
               child: Text(tabItem.name),
             ),
         TabNavigatorRoutes.postDetails: (context) =>
-            PostDetailWidget.create(arg)
+            PostDetailWidget.create(arg),
+        TabNavigatorRoutes.createComment: (context) =>
+            CreateCommentWidget.create(arg),
+        TabNavigatorRoutes.updateComment: (context) =>
+            UpdateCommentWidget.create(arg)
       };
 
   @override
@@ -28,7 +34,8 @@ class TabNavigator extends StatelessWidget {
       key: navigatorKey,
       initialRoute: TabNavigatorRoutes.root,
       onGenerateRoute: (settings) {
-        var rb = _routeBuilders(context, arg: settings.arguments);
+        Map<String, WidgetBuilder> rb =
+            _routeBuilders(context, arg: settings.arguments);
         if (rb.containsKey(settings.name)) {
           return MaterialPageRoute(
             builder: (context) => rb[settings.name]!(context),

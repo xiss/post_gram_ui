@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart';
 import 'package:post_gram_ui/domain/models/comment/comment.dart';
+import 'package:post_gram_ui/domain/models/like/like.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
 import 'package:post_gram_ui/domain/exceptions.dart';
@@ -11,15 +12,15 @@ import 'package:post_gram_ui/domain/models/post/post.dart';
 import 'package:post_gram_ui/domain/models/subscription/subscription.dart';
 import 'package:post_gram_ui/domain/models/user/user.dart';
 
-class Database {
-  static const String _databaseName = "postgram_db_v1.3.db";
+class DatabaseRepository {
+  static const String _databaseName = "postgram_db_v1.10.db";
   static const int _databaseVersion = 1;
   static bool _isInitialized = false;
   static String _path = "";
   static late sqflite.Database _database;
-  static final Database instance = Database._();
+  static final DatabaseRepository instance = DatabaseRepository._();
 
-  Database._();
+  DatabaseRepository._();
 
   static Future initialize() async {
     if (!_isInitialized) {
@@ -51,6 +52,8 @@ class Database {
     Post: (map) => Post.fromMap(map),
     Subscription: ((map) => Subscription.fromMap(map)),
     PostContent: ((map) => PostContent.fromMap(map)),
+    Comment: (map) => Comment.fromMap(map),
+    Like: ((map) => Like.fromMap(map))
   };
 
   String _dbName(Type type) {
@@ -115,6 +118,10 @@ class Database {
         .delete(_dbName(T), where: 'id = ?', whereArgs: [model.id]);
   }
 
+  Future<int> deleteById<T extends DbModelBase>(String id) async {
+    return await _database.delete(_dbName(T), where: 'id = $id');
+  }
+
   Future<int> createUpdate<T extends DbModelBase>(T model) async {
     var dbItem = await get<T>(model.id);
     var res = dbItem == null ? insert(model) : update(model);
@@ -135,11 +142,11 @@ class Database {
 
   Future<void> createUpdateRange<T extends DbModelBase>(Iterable<T> values,
       {bool Function(T oldItem, T newItem)? updateCond}) async {
-    var batch = _database.batch();
+    sqflite.Batch batch = _database.batch();
 
-    for (var row in values) {
-      var dbItem = await get<T>(row.id);
-      var data = row.toMap();
+    for (T row in values) {
+      T? dbItem = await get<T>(row.id);
+      Map<String, dynamic> data = row.toMap();
       // if (row.id == "") {
       //   data["id"] = const Uuid().v4();
       // }
@@ -155,10 +162,10 @@ class Database {
   }
 
   Future<void> clearDatabase() async {
-    var batch = _database.batch();
+    sqflite.Batch batch = _database.batch();
     batch.delete(_dbName(Avatar));
     batch.delete(_dbName(Comment));
-    // batch.delete(_dbName(Like));//TODO
+    batch.delete(_dbName(Like));
     batch.delete(_dbName(PostContent));
     batch.delete(_dbName(Post));
     batch.delete(_dbName(Subscription));

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:post_gram_ui/data/services/auth_service.dart';
-import 'package:post_gram_ui/data/services/database_service.dart';
 import 'package:post_gram_ui/domain/exceptions.dart';
 import 'package:post_gram_ui/domain/models/user/user_create_model.dart';
 import 'package:post_gram_ui/ui/navigation/app_navigator.dart';
@@ -85,7 +84,7 @@ class RegistrationViewModel extends ChangeNotifier {
         await _authService.registerUser(model);
         //state = state.copyWith(isLoading: false);
         //.then((value) => AppNavigator.toLoader());
-        await DatabaseService().clearDatabase();
+        await _authService.clearDatabase();
         await _authService.auth(state.email, state.password);
         AppNavigator.toApp();
       } on NoNetworkPostGramException {

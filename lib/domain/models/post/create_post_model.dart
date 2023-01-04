@@ -5,9 +5,9 @@ part 'create_post_model.g.dart';
 
 @JsonSerializable()
 class CreatePostModel {
-  String header;
-  String body;
-  List<MetadataModel> attachments;
+  final String header;
+  final String body;
+  final List<MetadataModel> attachments;
 
   CreatePostModel({
     required this.header,

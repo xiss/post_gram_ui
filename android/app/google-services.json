@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "603753379315",
+    "project_id": "postgram-cdf06",
+    "storage_bucket": "postgram-cdf06.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:603753379315:android:85e537487a6f61bb104e86",
+        "android_client_info": {
+          "package_name": "com.example.post_gram_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "603753379315-a3ttcn1tb9d4057i6tp22q1pb0t9f9ep.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTgbeLnK4Q2tA3-3SFTsBd9XGPJ6dxnwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "603753379315-a3ttcn1tb9d4057i6tp22q1pb0t9f9ep.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "603753379315-2h2kva1pshurvfhj34rggbbplhksor25.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.postGramUi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

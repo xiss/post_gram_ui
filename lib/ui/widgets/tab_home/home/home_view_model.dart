@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:post_gram_ui/data/services/database_service.dart';
 import 'package:post_gram_ui/data/services/post_service.dart';
 import 'package:post_gram_ui/domain/exceptions.dart';
 import 'package:post_gram_ui/domain/models/post/post_model.dart';
@@ -8,7 +7,6 @@ import 'package:post_gram_ui/ui/widgets/tab_profile/profile/profile_widget.dart'
 
 class HomeViewModel extends ChangeNotifier {
   BuildContext context;
-  final DatabaseService _databaseService = DatabaseService();
   final PostService _postService = PostService();
 
   HomeViewModel({required this.context}) {
@@ -32,7 +30,7 @@ class HomeViewModel extends ChangeNotifier {
   void _asyncInit() async {
     try {
       await _postService.syncPosts();
-      posts = await _databaseService.getPosts();
+      posts = await _postService.getPosts();
     } on InnerPostGramException catch (e) {
       error = e.message;
     }

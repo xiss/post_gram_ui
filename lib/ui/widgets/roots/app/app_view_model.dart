@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:post_gram_ui/data/services/attachment_service.dart';
+import 'package:post_gram_ui/data/services/user_service.dart';
 import 'package:post_gram_ui/domain/enums/tab_item.dart';
 import 'package:post_gram_ui/domain/models/attachment/attachment_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
-import 'package:post_gram_ui/internal/configs/shared_preferences_helper.dart';
 import 'package:post_gram_ui/ui/navigation/tab_enums.dart';
 
 class AppViewModel extends ChangeNotifier {
   BuildContext context;
   final AttachmentService _attachmentService = AttachmentService();
+  final UserService _userService = UserService();
 
   AppViewModel({required this.context}) {
     _asyncInit();
@@ -52,7 +53,7 @@ class AppViewModel extends ChangeNotifier {
   }
 
   void _asyncInit() async {
-    UserModel? user = await SharedPreferencesHelper.getStoredUser();
+    UserModel? user = await _userService.getCurrentUser();
     if (user != null) {
       name = "${user.name} (${user.nickname})";
 

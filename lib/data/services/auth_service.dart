@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:post_gram_ui/data/repositories/database_repository.dart';
 import 'package:post_gram_ui/domain/exceptions.dart';
 import 'package:post_gram_ui/domain/models/auth/token_response.dart';
 import 'package:post_gram_ui/domain/models/user/user_create_model.dart';
@@ -11,6 +12,7 @@ import 'package:post_gram_ui/internal/dependencies/repository_module.dart';
 
 class AuthService {
   final ApiRepositoryBase _apiRepository = RepositoryModule.apiReposytory();
+  static final DatabaseRepository _database = DatabaseRepository.instance;
 
   Future auth(String? login, String? password) async {
     if (login != null && password != null) {
@@ -73,5 +75,9 @@ class AuthService {
     } catch (e) {
       throw const InnerPostGramException();
     }
+  }
+
+  Future clearDatabase() async {
+    await _database.clearDatabase();
   }
 }

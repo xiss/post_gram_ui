@@ -18,7 +18,7 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
       likeCount: json['likeCount'] as int,
       dislikeCount: json['dislikeCount'] as int,
       commentCount: json['commentCount'] as int,
-      isLikedByUser: json['isLikedByUser'] as bool?,
+      likeByUserId: json['likeByUserId'] as String?,
     );
 
 Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
@@ -31,5 +31,5 @@ Map<String, dynamic> _$PostToJson(Post instance) => <String, dynamic>{
       'likeCount': instance.likeCount,
       'dislikeCount': instance.dislikeCount,
       'commentCount': instance.commentCount,
-      'isLikedByUser': instance.isLikedByUser,
+      'likeByUserId': instance.likeByUserId,
     };
