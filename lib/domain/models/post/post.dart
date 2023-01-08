@@ -6,7 +6,7 @@ part 'post.g.dart';
 
 @JsonSerializable()
 class Post implements DbModelBase {
-  String? authorId; //TODO сделать поле имутабельным
+  String? authorId;
   @override
   final String id;
   final DateTime created;

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:post_gram_ui/domain/models/subscription/subscription.dart';
 
 part 'subscription_model.g.dart';
 
@@ -22,6 +23,9 @@ class SubscriptionModel {
 
   factory SubscriptionModel.fromJson(Map<String, dynamic> json) {
     return _$SubscriptionModelFromJson(json);
+  }
+  factory SubscriptionModel.fromEntity(Subscription entity) {
+    return SubscriptionModel.fromJson(entity.toJson());
   }
 
   Map<String, dynamic> toJson() {

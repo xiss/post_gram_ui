@@ -45,7 +45,7 @@ class Like implements DbModelBase {
   factory Like.fromMap(Map<String, dynamic> map) {
     return Like(
         id: map['id'] as String,
-        isLike: Converter.intToBool(map['isLike'] as int?),
+        isLike: Converter.intToNullableBool(map['isLike'] as int?),
         entityId: map['entityId'] as String,
         authorId: map['authorId'] as String,
         created: DateTime.parse(map['created'] as String),

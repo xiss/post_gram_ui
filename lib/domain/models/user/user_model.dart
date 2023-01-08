@@ -15,17 +15,18 @@ class UserModel {
   final String email;
   final String nickname;
   final DateTime birthDate;
+  final bool isPrivate;
 
-  UserModel({
-    this.avatar,
-    required this.id,
-    required this.name,
-    required this.surname,
-    required this.patronymic,
-    required this.email,
-    required this.nickname,
-    required this.birthDate,
-  });
+  UserModel(
+      {this.avatar,
+      required this.id,
+      required this.name,
+      required this.surname,
+      required this.patronymic,
+      required this.email,
+      required this.nickname,
+      required this.birthDate,
+      required this.isPrivate});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return _$UserModelFromJson(json);

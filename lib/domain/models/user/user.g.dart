@@ -15,6 +15,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       email: json['email'] as String,
       nickname: json['nickname'] as String,
       birthDate: DateTime.parse(json['birthDate'] as String),
+      isPrivate: json['isPrivate'] as bool,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -26,4 +27,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'email': instance.email,
       'nickname': instance.nickname,
       'birthDate': instance.birthDate.toIso8601String(),
+      'isPrivate': instance.isPrivate,
     };

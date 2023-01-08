@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:post_gram_ui/domain/models/db_model_base.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
+import 'package:post_gram_ui/helpers/converter.dart';
 
 part 'user.g.dart';
 
@@ -15,17 +16,18 @@ class User implements DbModelBase {
   final String email;
   final String nickname;
   final DateTime birthDate;
+  final bool isPrivate;
 
-  User({
-    this.avatarId,
-    required this.id,
-    required this.name,
-    required this.surname,
-    required this.patronymic,
-    required this.email,
-    required this.nickname,
-    required this.birthDate,
-  });
+  User(
+      {this.avatarId,
+      required this.id,
+      required this.name,
+      required this.surname,
+      required this.patronymic,
+      required this.email,
+      required this.nickname,
+      required this.birthDate,
+      required this.isPrivate});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return _$UserFromJson(json);
@@ -41,7 +43,17 @@ class User implements DbModelBase {
   }
 
   factory User.fromMap(Map<String, dynamic> map) {
-    return _$UserFromJson(map);
+    return User(
+      avatarId: map['avatarId'] as String?,
+      id: map['id'] as String,
+      name: map['name'] as String,
+      surname: map['surname'] as String,
+      patronymic: map['patronymic'] as String,
+      email: map['email'] as String,
+      nickname: map['nickname'] as String,
+      birthDate: DateTime.parse(map['birthDate'] as String),
+      isPrivate: Converter.intToBool(map['isPrivate'] as int),
+    );
   }
 
   factory User.fromModel(UserModel model) {
