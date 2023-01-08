@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:post_gram_ui/domain/models/attachment/metadata_model.dart';
@@ -10,7 +12,9 @@ import 'package:post_gram_ui/domain/models/like/update_like_model.dart';
 import 'package:post_gram_ui/domain/models/post/create_post_model.dart';
 import 'package:post_gram_ui/domain/models/post/post_model.dart';
 import 'package:post_gram_ui/domain/models/post/update_post_model.dart';
+import 'package:post_gram_ui/domain/models/subscription/create_subscription_model.dart';
 import 'package:post_gram_ui/domain/models/subscription/subscription_model.dart';
+import 'package:post_gram_ui/domain/models/subscription/update_subscription_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
 import 'package:retrofit/http.dart';
 
@@ -33,8 +37,17 @@ abstract class ApiClient {
   Future<List<PostModel>> getPosts(
       @Query("take") int take, @Query("skip") int skip);
 
+  @GET("/api/User/GetUsers")
+  Future<List<UserModel>> getUsers();
+
   @GET("/api/Post/GetCommentsForPost")
   Future<List<CommentModel>> getCommentsForPost(@Query("postId") String postId);
+
+  @GET("/api/Post/GetComment")
+  Future<CommentModel> getComment(@Query("commentId") String commentId);
+
+  @GET("/api/Post/GetPost")
+  Future<PostModel> getPost(@Query("postId") String postId);
 
   @POST("/api/Attachment/UploadFile")
   Future<MetadataModel> uploadFile({@Part(value: "file") required File file});
@@ -58,6 +71,10 @@ abstract class ApiClient {
   @POST("/api/Post/CreateComment")
   Future<String> createComment({@Body() required CreateCommentModel model});
 
+  @POST("/api/User/CreateSubscription")
+  Future<String> createSubscription(
+      {@Body() required CreateSubscriptionModel model});
+
   @PUT("/api/Post/UpdateComment")
   Future<CommentModel> updateComment(
       {@Body() required UpdateCommentModel model});
@@ -67,6 +84,10 @@ abstract class ApiClient {
 
   @PUT("/api/Post/UpdatePost")
   Future<PostModel> updatePost({@Body() required UpdatePostModel model});
+
+  @PUT("/api/User/UpdateSubscription")
+  Future<SubscriptionModel> updateSubscription(
+      {@Body() required UpdateSubscriptionModel model});
 
   @DELETE("/api/Post/DeleteComment")
   Future<String> deleteComment({@Query("commentId") required String commentId});

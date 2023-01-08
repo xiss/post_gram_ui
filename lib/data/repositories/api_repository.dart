@@ -15,7 +15,9 @@ import 'package:post_gram_ui/domain/models/like/update_like_model.dart';
 import 'package:post_gram_ui/domain/models/post/create_post_model.dart';
 import 'package:post_gram_ui/domain/models/post/post_model.dart';
 import 'package:post_gram_ui/domain/models/post/update_post_model.dart';
+import 'package:post_gram_ui/domain/models/subscription/create_subscription_model.dart';
 import 'package:post_gram_ui/domain/models/subscription/subscription_model.dart';
+import 'package:post_gram_ui/domain/models/subscription/update_subscription_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_create_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
 import 'package:post_gram_ui/domain/repository/api_repository_base.dart';
@@ -66,6 +68,11 @@ class ApiRepository extends ApiRepositoryBase {
   }
 
   @override
+  Future<List<UserModel>> getUsers() async {
+    return await _apiClient.getUsers();
+  }
+
+  @override
   Future<dynamic> registerUser(UserCreateModel model) async {
     return await _authClient.registerUser(model);
   }
@@ -96,6 +103,12 @@ class ApiRepository extends ApiRepositoryBase {
   }
 
   @override
+  Future<String> createSubscription(
+      {required CreateSubscriptionModel model}) async {
+    return await _apiClient.createSubscription(model: model);
+  }
+
+  @override
   Future<String> createLike({required CreateLikeModel model}) async {
     return await _apiClient.createLike(model: model);
   }
@@ -103,6 +116,16 @@ class ApiRepository extends ApiRepositoryBase {
   @override
   Future<List<CommentModel>> getCommentsForPost(String postId) {
     return _apiClient.getCommentsForPost(postId);
+  }
+
+  @override
+  Future<CommentModel> getComment(String commentId) {
+    return _apiClient.getComment(commentId);
+  }
+
+  @override
+  Future<PostModel> getPost(String postId) {
+    return _apiClient.getPost(postId);
   }
 
   @override
@@ -119,6 +142,12 @@ class ApiRepository extends ApiRepositoryBase {
   @override
   Future<LikeModel> updateLike({required UpdateLikeModel model}) async {
     return await _apiClient.updateLike(model: model);
+  }
+
+  @override
+  Future<SubscriptionModel> updateSubscription(
+      {required UpdateSubscriptionModel model}) async {
+    return await _apiClient.updateSubscription(model: model);
   }
 
   @override

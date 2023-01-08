@@ -11,9 +11,10 @@ import 'package:post_gram_ui/domain/models/db_model_base.dart';
 import 'package:post_gram_ui/domain/models/post/post.dart';
 import 'package:post_gram_ui/domain/models/subscription/subscription.dart';
 import 'package:post_gram_ui/domain/models/user/user.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DatabaseRepository {
-  static const String _databaseName = "postgram_db_v1.10.db";
+  static const String _databaseName = "postgram_db_v1.21.db";
   static const int _databaseVersion = 1;
   static bool _isInitialized = false;
   static String _path = "";
@@ -63,7 +64,6 @@ class DatabaseRepository {
     return "t_${type}s";
   }
 
-//TODO Думаю нужно то что ниже убрать в репозиторий который будет реализовывать работу с каждой из таблиц отдельно
   Future<Iterable<T>> getRange<T extends DbModelBase>(
       {Map<String, dynamic>? whereMap, int? take, int? skip}) async {
     Iterable<Map<String, dynamic>> query;
@@ -102,7 +102,6 @@ class DatabaseRepository {
   Future<int> insert<T extends DbModelBase>(T model) async {
     if (model.id == "") {
       Map<String, dynamic> modelmap = model.toMap();
-      //modelmap["id"] = const Uuid().v4();
       model = _factories[T]!(modelmap);
     }
     return await _database.insert(_dbName(T), model.toMap());
@@ -122,23 +121,31 @@ class DatabaseRepository {
     return await _database.delete(_dbName(T), where: 'id = $id');
   }
 
+  Future<int> deleteRange<T extends DbModelBase>(
+      Map<String, dynamic> whereMap) async {
+    List whereArgs = <dynamic>[];
+    List<String> whereBuilder = <String>[];
+    whereMap.forEach((key, value) {
+      if (value is Iterable<dynamic>) {
+        whereBuilder
+            .add("$key IN (${List.filled(value.length, '?').join(',')})");
+        whereArgs.addAll(value.map((e) => "$e"));
+      } else {
+        whereBuilder.add("$key = ?");
+        whereArgs.add(value);
+      }
+    });
+
+    var a = await _database.delete(_dbName(T),
+        where: whereBuilder.join(' and '), whereArgs: whereArgs);
+    return a;
+  }
+
   Future<int> createUpdate<T extends DbModelBase>(T model) async {
     var dbItem = await get<T>(model.id);
     var res = dbItem == null ? insert(model) : update(model);
     return await res;
   }
-
-  // Future inserRange<T extends DbModelBase>(Iterable<T> values) async {
-  //   var batch = _database.batch();
-  //   for (var row in values) {
-  //     var data = row.toMap();
-  //     // if (row.id == "") {
-  //     //   data["id"] = const Uuid().v4();
-  //     // }
-  //     batch.insert(_dbName(T), data);
-  //   }
-  //   await batch.commit(noResult: true);
-  // }
 
   Future<void> createUpdateRange<T extends DbModelBase>(Iterable<T> values,
       {bool Function(T oldItem, T newItem)? updateCond}) async {
@@ -147,14 +154,15 @@ class DatabaseRepository {
     for (T row in values) {
       T? dbItem = await get<T>(row.id);
       Map<String, dynamic> data = row.toMap();
-      // if (row.id == "") {
-      //   data["id"] = const Uuid().v4();
-      // }
 
       if (dbItem == null) {
-        batch.insert(_dbName(T), data);
+        batch.insert(_dbName(T), data,
+            conflictAlgorithm: ConflictAlgorithm.replace);
       } else if (updateCond == null || updateCond(dbItem, row)) {
-        batch.update(_dbName(T), data, where: "id = ?", whereArgs: [row.id]);
+        batch.update(_dbName(T), data,
+            where: "id = ?",
+            whereArgs: [row.id],
+            conflictAlgorithm: ConflictAlgorithm.replace);
       }
     }
 

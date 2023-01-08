@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:post_gram_ui/data/repositories/database_repository.dart';
+import 'package:post_gram_ui/data/services/user_service.dart';
 import 'package:post_gram_ui/domain/exceptions.dart';
 import 'package:post_gram_ui/domain/models/auth/token_response.dart';
 import 'package:post_gram_ui/domain/models/user/user_create_model.dart';
@@ -12,6 +13,7 @@ import 'package:post_gram_ui/internal/dependencies/repository_module.dart';
 
 class AuthService {
   final ApiRepositoryBase _apiRepository = RepositoryModule.apiReposytory();
+  final UserService _userService = UserService();
   static final DatabaseRepository _database = DatabaseRepository.instance;
 
   Future auth(String? login, String? password) async {
@@ -21,10 +23,7 @@ class AuthService {
             await _apiRepository.getToken(login: login, password: password);
         if (token != null) {
           await TokenStorage.setStoredToken(token);
-          UserModel? userModel = await _apiRepository.getCurrentUser();
-          if (userModel != null) {
-            await SharedPreferencesHelper.setStoredUser(userModel);
-          }
+          _userService.syncCurrentUser();
         }
       } on DioError catch (e) {
         if (e.error is SocketException) {
