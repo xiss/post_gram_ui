@@ -5,11 +5,12 @@ import 'package:post_gram_ui/ui/navigation/tab_navigator_routes.dart';
 import 'package:post_gram_ui/ui/widgets/tab_home/create_comment/create_comment_widget.dart';
 import 'package:post_gram_ui/ui/widgets/tab_home/post_details/post_detail_widget.dart';
 import 'package:post_gram_ui/ui/widgets/tab_home/update_comment/update_comment_widget.dart';
+import 'package:post_gram_ui/ui/widgets/tab_home/update_post/update_post_widget.dart';
 
-class TabNavigator extends StatelessWidget {
+class TabNavigatorWidget extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final TabItemEnum tabItem;
-  const TabNavigator(
+  const TabNavigatorWidget(
       {super.key, required this.navigatorKey, required this.tabItem});
 
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context,
@@ -25,7 +26,9 @@ class TabNavigator extends StatelessWidget {
         TabNavigatorRoutes.createComment: (context) =>
             CreateCommentWidget.create(arg),
         TabNavigatorRoutes.updateComment: (context) =>
-            UpdateCommentWidget.create(arg)
+            UpdateCommentWidget.create(arg),
+        TabNavigatorRoutes.updatePost: (context) =>
+            UpdatePostWidget.create(arg),
       };
 
   @override

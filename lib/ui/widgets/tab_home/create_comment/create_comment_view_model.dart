@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:post_gram_ui/data/services/post_service.dart';
 import 'package:post_gram_ui/domain/models/comment/create_comment_model.dart';
-import 'package:post_gram_ui/ui/widgets/tab_home/create_comment/create_comment_view_model_state.dart';
+import 'package:post_gram_ui/ui/widgets/common/comments/comments_view_model.dart';
+import 'package:post_gram_ui/ui/widgets/tab_home/create_comment/create_comment_model_state.dart';
 
 class CreateCommentViewModel extends ChangeNotifier {
   BuildContext context;
   final PostService _postService = PostService();
+  CommentsViewModel? _commentsViewModel;
 
   TextEditingController bodyController = TextEditingController();
   TextEditingController quoteController = TextEditingController();
@@ -17,7 +19,7 @@ class CreateCommentViewModel extends ChangeNotifier {
     required String postId,
     String? quotedCommentId,
   }) {
-    state = CreateCommentViewModelState(
+    state = CreateCommentModelState(
       postId: postId,
       quoteCommentId: quotedCommentId,
       quoteSource: quoteSource,
@@ -46,12 +48,12 @@ class CreateCommentViewModel extends ChangeNotifier {
     }
   }
 
-  CreateCommentViewModelState _state = CreateCommentViewModelState();
-  CreateCommentViewModelState get state {
+  CreateCommentModelState _state = CreateCommentModelState();
+  CreateCommentModelState get state {
     return _state;
   }
 
-  set state(CreateCommentViewModelState value) {
+  set state(CreateCommentModelState value) {
     _state = value;
     notifyListeners();
   }
@@ -70,10 +72,17 @@ class CreateCommentViewModel extends ChangeNotifier {
         quotedCommentId: state.quoteCommentId,
         quotedText: state.quote,
       );
-      await _postService.createComment(model);
-      await _postService.syncCommentsForPost(postId);
+      try {
+        await _postService.createComment(model);
+        await _postService.syncCommentsForPost(postId);
+        await _postService.syncPost(postId);
+      } on Exception catch (e) {
+        state = state.copyWith(exeption: e);
+      }
+
       Navigator.of(context).pop();
     }
+    _commentsViewModel?.notifyListeners();
     notifyListeners();
   }
 }

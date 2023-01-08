@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:post_gram_ui/ui/widgets/roots/auth/auth_view_model.dart';
-import 'package:post_gram_ui/ui/widgets/roots/registration/registration_widget.dart';
+import 'package:post_gram_ui/ui/widgets/roots/auth/auth_model.dart';
 import 'package:provider/provider.dart';
 
 class AuthWidget extends StatelessWidget {
@@ -8,7 +7,7 @@ class AuthWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var viewModel = context.watch<AuthViewModel>();
+    var viewModel = context.watch<AuthModel>();
 
     return Scaffold(
       body: SafeArea(
@@ -45,7 +44,7 @@ class AuthWidget extends StatelessWidget {
 
               //registration button
               ElevatedButton(
-                onPressed: (() => RegistrationWidget.create()),
+                onPressed: viewModel.toRegistration,
                 child: const Text("Registration"),
               ),
               if (viewModel.state.isLoading) const CircularProgressIndicator(),
@@ -61,8 +60,8 @@ class AuthWidget extends StatelessWidget {
     );
   }
 
-  static Widget create() => ChangeNotifierProvider<AuthViewModel>(
-        create: (context) => AuthViewModel(context: context),
+  static Widget create() => ChangeNotifierProvider<AuthModel>(
+        create: (context) => AuthModel(context: context),
         child: const AuthWidget(),
       );
 }

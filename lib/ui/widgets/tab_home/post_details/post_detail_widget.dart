@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:post_gram_ui/domain/models/post/post_model.dart';
+import 'package:post_gram_ui/ui/widgets/common/comments/comments_view_model.dart';
 import 'package:post_gram_ui/ui/widgets/common/comments/comments_view_widget.dart';
+import 'package:post_gram_ui/ui/widgets/common/post/post_view_model.dart';
 import 'package:post_gram_ui/ui/widgets/common/post/post_view_widget.dart';
-import 'package:post_gram_ui/ui/widgets/tab_home/post_details/post_detail_view_model.dart';
+import 'package:post_gram_ui/ui/widgets/tab_home/post_details/post_detail_model.dart';
 import 'package:provider/provider.dart';
 
 class PostDetailWidget extends StatelessWidget {
@@ -10,7 +12,7 @@ class PostDetailWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PostDetailViewModel viewModel = context.watch();
+    PostDetailModel viewModel = context.watch<PostDetailModel>();
     PostModel? postModel = viewModel.post;
 
     return Scaffold(
@@ -20,17 +22,14 @@ class PostDetailWidget extends StatelessWidget {
         onPressed: () => viewModel.createComment(postModel?.id),
       ),
       body: ListView(
-        //shrinkWrap: true,
         children: [
           postModel != null
-              ? PostViewWidget.create(postModel, false)
+              ? PostViewWidget.create(postModel.id, false)
               : const Center(
                   child: CircularProgressIndicator(),
                 ),
-//TODO Работает из за того что мы создаем виджет когда список уже есть, похоже это не правильно
-// здесь не нужна эта проверка
           viewModel.comments.isNotEmpty
-              ? CommentsViewWidget.create(viewModel.comments)
+              ? CommentsViewWidget.create(viewModel.postId)
               : const SizedBox.shrink()
         ],
       ),
@@ -43,9 +42,17 @@ class PostDetailWidget extends StatelessWidget {
       postId = arg;
     }
 
-    return ChangeNotifierProvider<PostDetailViewModel>(
-      create: (BuildContext context) =>
-          PostDetailViewModel(context: context, postId: postId),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (context) =>
+                PostDetailModel(context: context, postId: postId)),
+        ChangeNotifierProvider(
+            create: (context) => CommentsViewModel(postId, context: context)),
+        ChangeNotifierProvider(
+            create: (context) =>
+                PostViewModel(postId, false, context: context)),
+      ],
       child: const PostDetailWidget(),
     );
   }

@@ -3,7 +3,7 @@ import 'package:post_gram_ui/data/services/auth_service.dart';
 import 'package:post_gram_ui/domain/exceptions.dart';
 import 'package:post_gram_ui/domain/models/user/user_create_model.dart';
 import 'package:post_gram_ui/ui/navigation/app_navigator.dart';
-import 'package:post_gram_ui/ui/widgets/roots/registration/registration_view_model_state.dart';
+import 'package:post_gram_ui/ui/widgets/roots/registration/registration_model_state.dart';
 
 class RegistrationViewModel extends ChangeNotifier {
   BuildContext context;
@@ -41,12 +41,12 @@ class RegistrationViewModel extends ChangeNotifier {
     });
   }
 
-  RegistrationViewModelState _state = RegistrationViewModelState();
-  RegistrationViewModelState get state {
+  RegistrationModelState _state = RegistrationModelState();
+  RegistrationModelState get state {
     return _state;
   }
 
-  set state(RegistrationViewModelState value) {
+  set state(RegistrationModelState value) {
     _state = value;
     notifyListeners();
   }
@@ -82,8 +82,6 @@ class RegistrationViewModel extends ChangeNotifier {
 
       try {
         await _authService.registerUser(model);
-        //state = state.copyWith(isLoading: false);
-        //.then((value) => AppNavigator.toLoader());
         await _authService.clearDatabase();
         await _authService.auth(state.email, state.password);
         AppNavigator.toApp();

@@ -5,11 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:post_gram_ui/data/services/attachment_service.dart';
 import 'package:post_gram_ui/data/services/auth_service.dart';
 import 'package:post_gram_ui/data/services/user_service.dart';
-import 'package:post_gram_ui/domain/exceptions.dart';
 import 'package:post_gram_ui/domain/models/attachment/attachment_model.dart';
 import 'package:post_gram_ui/domain/models/attachment/metadata_model.dart';
-import 'package:post_gram_ui/domain/models/subscription/subscription_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
+import 'package:post_gram_ui/domain/models/user/user_subscriptions_avatar_model.dart';
 import 'package:post_gram_ui/ui/navigation/app_navigator.dart';
 import 'package:post_gram_ui/ui/widgets/common/camera_widget.dart';
 
@@ -18,27 +17,30 @@ class ProfileViewModel extends ChangeNotifier {
   final UserService _userService = UserService();
   final AuthService _authService = AuthService();
   final AttachmentService _attachmentService = AttachmentService();
-  List<SubscriptionModel> slaveSubscriptions = <SubscriptionModel>[];
-  List<SubscriptionModel> masterSubscriptions = <SubscriptionModel>[];
+  List<UserSubscriptionsAvatarModel> subscriptionList = [];
 
   String fullName = "";
   String birthDate = "";
   String eMail = "";
   String followers = "";
   String subscriptions = "";
-  NetworkImage? avatar;
 
-  String? _error;
-  String? get error => _error;
-  set error(String? value) {
-    _error = value;
+  NetworkImage? _avatar;
+  NetworkImage? get avatar => _avatar;
+  set avatar(NetworkImage? avatar) {
+    _avatar = avatar;
+    notifyListeners();
+  }
+
+  Exception? _exeption;
+  Exception? get exeption => _exeption;
+  set exeption(Exception? exeption) {
+    _exeption = exeption;
     notifyListeners();
   }
 
   String? _newAvatarFilePath;
-
   String? get newAvatarFilePath => _newAvatarFilePath;
-
   set newAvatarFilePath(String? value) {
     _newAvatarFilePath = value;
     notifyListeners();
@@ -66,28 +68,33 @@ class ProfileViewModel extends ChangeNotifier {
             await _attachmentService.uploadFile(File(newAvatarFilePath!));
         await _attachmentService.deleteCurrentUserAvatar();
         await _attachmentService.addAvatarToUser(model);
+        if (avatar == null) {
+          await _userService.syncCurrentUser();
+          await _asyncInit();
+        }
         await avatar?.evict();
-        notifyListeners();
-        //throw Exception();
-      } catch (e) {
-        //TODO обработка ошибок
-        error = "inner Exception";
+      } on Exception catch (e) {
+        exeption = e;
       }
+      notifyListeners();
     }
   }
 
-  void _asyncInit() async {
+  Future _asyncInit() async {
     UserModel? userL;
     try {
-      slaveSubscriptions = await _userService.getSlaveSubscriptions();
-      masterSubscriptions = await _userService.getMasterSubscriptions();
+      await _userService.syncSubscriptions();
+
+      subscriptionList = await _userService.getSubscriptionsWithUsers();
       userL = await _userService.getCurrentUser();
-    } on InnerPostGramException catch (e) {
-      error = e.message;
+    } on Exception catch (e) {
+      exeption = e;
     }
 
-    followers = "Followers: ${masterSubscriptions.length}";
-    subscriptions = "Subscriptions: ${slaveSubscriptions.length}";
+    followers =
+        "Followers: ${subscriptionList.where((element) => element.masterSubscription != null).length}";
+    subscriptions =
+        "Subscriptions: ${subscriptionList.where((element) => element.slaveSubscription != null).length}";
     if (userL != null) {
       fullName =
           "${userL.name} ${userL.patronymic} ${userL.surname} (${userL.nickname})";
@@ -99,7 +106,6 @@ class ProfileViewModel extends ChangeNotifier {
         avatar = await _attachmentService.getAttachment(avatarL.link);
       }
     }
-    //TODO Наверное стоит создать свойства в модели и обновлять там
     notifyListeners();
   }
 

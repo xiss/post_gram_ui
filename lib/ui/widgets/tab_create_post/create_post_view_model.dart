@@ -6,7 +6,7 @@ import 'package:post_gram_ui/data/services/post_service.dart';
 import 'package:post_gram_ui/domain/models/attachment/metadata_model.dart';
 import 'package:post_gram_ui/domain/models/post/create_post_model.dart';
 import 'package:post_gram_ui/ui/widgets/common/camera_widget.dart';
-import 'package:post_gram_ui/ui/widgets/roots/create_post/create_post_view_model_state.dart';
+import 'package:post_gram_ui/ui/widgets/tab_create_post/create_post_model_state.dart';
 
 class CreatePostViewModel extends ChangeNotifier {
   BuildContext context;
@@ -25,12 +25,12 @@ class CreatePostViewModel extends ChangeNotifier {
     });
   }
 
-  CreatePostViewModelState _state = CreatePostViewModelState(attachments: []);
-  CreatePostViewModelState get state {
+  CreatePostModelState _state = CreatePostModelState(attachments: []);
+  CreatePostModelState get state {
     return _state;
   }
 
-  set state(CreatePostViewModelState value) {
+  set state(CreatePostModelState value) {
     _state = value;
     notifyListeners();
   }
@@ -49,13 +49,19 @@ class CreatePostViewModel extends ChangeNotifier {
       for (var element in state.attachments) {
         files.add(File(element));
       }
-      List<MetadataModel> attachments =
-          await _attachmentService.uploadFiles(files);
-      CreatePostModel model =
-          CreatePostModel(header: header, body: body, attachments: attachments);
-      await _postService.createPost(model);
+
+      try {
+        List<MetadataModel> attachments =
+            await _attachmentService.uploadFiles(files);
+        CreatePostModel model = CreatePostModel(
+            header: header, body: body, attachments: attachments);
+        await _postService.createPost(model);
+      } on Exception catch (e) {
+        state = state.copyWith(exeption: e);
+      }
+
       //await _postService.syncPosts();
-      state = CreatePostViewModelState(attachments: []);
+      state = CreatePostModelState(attachments: []);
       headerController.text = "";
       bodyController.text = "";
     }
@@ -74,5 +80,10 @@ class CreatePostViewModel extends ChangeNotifier {
         ),
       ),
     );
+  }
+
+  void deletePhoto(String photoPath) {
+    state.attachments.remove(photoPath);
+    notifyListeners();
   }
 }

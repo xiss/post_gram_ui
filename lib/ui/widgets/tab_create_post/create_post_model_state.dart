@@ -1,31 +1,31 @@
-class CreatePostViewModelState {
+class CreatePostModelState {
   final String? header;
   final String? body;
   final bool isLoading;
-  final String? errorText;
+  final Exception? exeption;
   List<String> attachments = List.empty();
 
-  CreatePostViewModelState({
+  CreatePostModelState({
     this.header,
     this.body,
     required this.attachments,
     this.isLoading = false,
-    this.errorText,
+    this.exeption,
   });
 
-  CreatePostViewModelState copyWith({
+  CreatePostModelState copyWith({
     String? header,
     String? body,
     List<String>? attachments,
     bool isLoading = false,
-    String? errorText,
+    Exception? exeption,
   }) {
-    return CreatePostViewModelState(
+    return CreatePostModelState(
       header: header ?? this.header,
       body: body ?? this.body,
       attachments: attachments ?? this.attachments,
       isLoading: isLoading,
-      errorText: errorText,
+      exeption: exeption,
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:post_gram_ui/domain/enums/tab_item.dart';
 import 'package:post_gram_ui/ui/navigation/tab_enums.dart';
-import 'package:post_gram_ui/ui/navigation/tab_navigator.dart';
+import 'package:post_gram_ui/ui/navigation/tab_navigator_widget.dart';
 import 'package:post_gram_ui/ui/widgets/common/bottom_tabs_widget.dart';
 import 'package:post_gram_ui/ui/widgets/roots/app/app_view_model.dart';
 import 'package:provider/provider.dart';
@@ -55,7 +55,7 @@ Widget _buildOffStageNavigator(BuildContext context, TabItemEnum item) {
   AppViewModel viewModel = context.watch<AppViewModel>();
   return Offstage(
     offstage: viewModel.currentTab != item,
-    child: TabNavigator(
+    child: TabNavigatorWidget(
       navigatorKey: viewModel.navigationKeys[item]!,
       tabItem: item,
     ),

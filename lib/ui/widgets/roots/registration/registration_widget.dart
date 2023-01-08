@@ -77,11 +77,12 @@ class RegistrationWidget extends StatelessWidget {
                     ),
                   ),
                   ElevatedButton(
-                      onPressed:
-                          viewModel.checkFields() && !viewModel.state.isLoading
-                              ? viewModel.register
-                              : null,
-                      child: const Text("Register")),
+                    onPressed:
+                        viewModel.checkFields() && !viewModel.state.isLoading
+                            ? viewModel.register
+                            : null,
+                    child: const Text("Register"),
+                  ),
                   if (viewModel.state.isLoading)
                     const CircularProgressIndicator(),
                   if (viewModel.state.errorText != null)

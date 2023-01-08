@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:post_gram_ui/data/services/post_service.dart';
 import 'package:post_gram_ui/domain/models/comment/comment_model.dart';
 import 'package:post_gram_ui/domain/models/comment/update_comment_model.dart';
-import 'package:post_gram_ui/ui/widgets/tab_home/update_comment/update_comment_view_model_state.dart';
+import 'package:post_gram_ui/ui/widgets/tab_home/update_comment/update_comment_model_state.dart';
 
 class UpdateCommentViewModel extends ChangeNotifier {
   BuildContext context;
@@ -25,12 +25,12 @@ class UpdateCommentViewModel extends ChangeNotifier {
     );
   }
 
-  UpdateCommentViewModelState _state = UpdateCommentViewModelState();
-  UpdateCommentViewModelState get state {
+  UpdateCommentModelState _state = UpdateCommentModelState();
+  UpdateCommentModelState get state {
     return _state;
   }
 
-  set state(UpdateCommentViewModelState value) {
+  set state(UpdateCommentModelState value) {
     _state = value;
     notifyListeners();
   }
@@ -47,7 +47,13 @@ class UpdateCommentViewModel extends ChangeNotifier {
         newBody: body,
         id: commentId,
       );
-      await _postService.updateComment(model);
+      try {
+        await _postService.updateComment(model);
+        await _postService.syncComment(commentId);
+      } on Exception catch (e) {
+        state = state.copyWith(exeption: e);
+      }
+
       Navigator.of(context).pop();
     }
     //notifyListeners();
@@ -56,7 +62,12 @@ class UpdateCommentViewModel extends ChangeNotifier {
   Future deleteComment() async {
     String? commentId = state.commentId;
     if (commentId != null) {
-      await _postService.deleteComment(commentId);
+      try {
+        await _postService.deleteComment(commentId);
+      } on Exception catch (e) {
+        state = state.copyWith(exeption: e);
+      }
+
       Navigator.of(context).pop();
     }
   }

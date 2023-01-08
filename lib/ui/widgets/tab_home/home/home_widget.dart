@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:post_gram_ui/ui/widgets/common/error_post_gram_widget.dart';
 import 'package:post_gram_ui/ui/widgets/common/posts/posts_view_widget.dart';
-import 'package:post_gram_ui/ui/widgets/tab_home/home/home_view_model.dart';
+import 'package:post_gram_ui/ui/widgets/tab_home/home/home_model.dart';
 import 'package:provider/provider.dart';
 
 class HomeWidget extends StatelessWidget {
@@ -8,14 +9,17 @@ class HomeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HomeViewModel viewModel = context.watch<HomeViewModel>();
+    HomeModel viewModel = context.watch<HomeModel>();
+    if (viewModel.exeption != null) {
+      return ErrorPostGramWidget(viewModel.exeption!);
+    }
 
     return SafeArea(child: PostsViewWidget.create(viewModel.posts));
   }
 
   static dynamic create() {
     return ChangeNotifierProvider(
-      create: (BuildContext context) => HomeViewModel(context: context),
+      create: (BuildContext context) => HomeModel(context: context),
       child: const HomeWidget(),
     );
   }

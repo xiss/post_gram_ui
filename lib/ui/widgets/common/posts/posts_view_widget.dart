@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:post_gram_ui/domain/models/post/post_model.dart';
 import 'package:post_gram_ui/ui/widgets/common/post/post_view_widget.dart';
-import 'package:post_gram_ui/ui/widgets/common/posts/posts_view_view_model.dart';
+import 'package:post_gram_ui/ui/widgets/common/posts/posts_view_model.dart';
 import 'package:provider/provider.dart';
 
 class PostsViewWidget extends StatelessWidget {
@@ -11,14 +11,14 @@ class PostsViewWidget extends StatelessWidget {
 
   static dynamic create(List<PostModel> posts) {
     return ChangeNotifierProvider(
-      create: (BuildContext context) => PostsViewViewModel(context: context),
+      create: (BuildContext context) => PostsViewModel(posts, context: context),
       child: PostsViewWidget(posts),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    PostsViewViewModel viewModel = context.watch<PostsViewViewModel>();
+    PostsViewModel viewModel = context.watch<PostsViewModel>();
     if (_posts.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     } else {
@@ -28,7 +28,7 @@ class PostsViewWidget extends StatelessWidget {
             child: ListView.separated(
                 controller: viewModel.scrollController,
                 itemBuilder: (_, index) {
-                  return PostViewWidget.create(_posts[index]);
+                  return PostViewWidget.create(_posts[index].id);
                 },
                 separatorBuilder: (_, __) => const Divider(),
                 itemCount: _posts.length),

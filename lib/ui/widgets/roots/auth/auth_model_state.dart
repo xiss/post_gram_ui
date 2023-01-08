@@ -1,4 +1,4 @@
-class AuthViewModelState {
+class AuthModelState {
   final String? login;
   final String? password;
   final bool isLoading;
@@ -6,7 +6,7 @@ class AuthViewModelState {
   final String? errorLogin;
   final String? errorPassword;
 
-  const AuthViewModelState({
+  const AuthModelState({
     this.login,
     this.password,
     this.isLoading = false,
@@ -15,7 +15,7 @@ class AuthViewModelState {
     this.errorPassword,
   });
 
-  AuthViewModelState copyWith({
+  AuthModelState copyWith({
     String? login,
     String? password,
     bool? isLoading = false,
@@ -23,7 +23,7 @@ class AuthViewModelState {
     String? errorLogin,
     String? errorPassword,
   }) {
-    return AuthViewModelState(
+    return AuthModelState(
       login: login ?? this.login,
       password: password ?? this.password,
       isLoading: isLoading ?? this.isLoading,

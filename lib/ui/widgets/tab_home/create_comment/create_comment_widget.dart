@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:post_gram_ui/ui/widgets/common/error_post_gram_widget.dart';
 import 'package:post_gram_ui/ui/widgets/tab_home/create_comment/create_comment_view_model.dart';
 import 'package:provider/provider.dart';
 
 class CreateCommentWidget extends StatelessWidget {
-  //TODO Почему он  StatelessWidget если сосояние есть?
   const CreateCommentWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     CreateCommentViewModel viewModel = context.watch<CreateCommentViewModel>();
     const sizedBoxSpace = SizedBox(height: 24);
+
+    if (viewModel.state.exeption != null) {
+      return ErrorPostGramWidget(viewModel.state.exeption!);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -73,11 +77,6 @@ class CreateCommentWidget extends StatelessWidget {
 
                   if (viewModel.state.isLoading)
                     const CircularProgressIndicator(),
-                  if (viewModel.state.errorText != null)
-                    Text(
-                      viewModel.state.errorText!,
-                      style: const TextStyle(color: Colors.red),
-                    ),
                 ],
               ),
             ],

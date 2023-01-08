@@ -1,33 +1,33 @@
-class CreateCommentViewModelState {
+class CreateCommentModelState {
   final String? body;
   final bool isLoading;
-  final String? errorText;
+  final Exception? exeption;
   final String? postId;
   final String? quoteCommentId;
   final String? quoteSource;
   final String? quote;
 
-  CreateCommentViewModelState({
+  CreateCommentModelState({
     this.postId,
     this.quoteCommentId,
     this.quoteSource,
     this.body,
-    this.errorText,
+    this.exeption,
     this.quote,
     this.isLoading = false,
   });
 
-  CreateCommentViewModelState copyWith(
+  CreateCommentModelState copyWith(
       {String? body,
       bool isLoading = false,
-      String? errorText,
+      Exception? exeption,
       String? postId,
       String? quoteCommentId,
       String? quoteSource,
       String? quote}) {
-    return CreateCommentViewModelState(
+    return CreateCommentModelState(
       body: body ?? this.body,
-      errorText: errorText ?? this.errorText,
+      exeption: exeption ?? this.exeption,
       postId: postId ?? this.postId,
       quoteCommentId: quoteCommentId ?? this.quoteCommentId,
       quoteSource: quoteSource ?? this.quoteSource,

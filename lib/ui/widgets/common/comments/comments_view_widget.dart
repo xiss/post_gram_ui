@@ -1,43 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:post_gram_ui/domain/models/comment/comment_model.dart';
 import 'package:post_gram_ui/ui/widgets/common/comment/comment_view_widget.dart';
-import 'package:post_gram_ui/ui/widgets/common/comments/comments_view_view_model.dart';
+import 'package:post_gram_ui/ui/widgets/common/comments/comments_view_model.dart';
+import 'package:post_gram_ui/ui/widgets/common/error_post_gram_widget.dart';
 import 'package:provider/provider.dart';
 
-class CommentsViewWidget extends StatefulWidget {
+class CommentsViewWidget extends StatelessWidget {
   const CommentsViewWidget({super.key});
 
   @override
-  State<CommentsViewWidget> createState() => _CommentsViewWidgetState();
-
-  static dynamic create(List<CommentModel> comments) {
-    return ChangeNotifierProvider(
-      create: (BuildContext context) =>
-          CommentsViewViewModel(comments, context: context),
-      child: const CommentsViewWidget(),
-    );
-  }
-}
-
-class _CommentsViewWidgetState extends State<CommentsViewWidget> {
-  @override
   Widget build(BuildContext context) {
-    CommentsViewViewModel viewModel = context.watch<CommentsViewViewModel>();
-    if (viewModel.commentsMap.isEmpty) {
+    CommentsViewModel viewModel = context.watch<CommentsViewModel>();
+
+    if (viewModel.exeption != null) {
+      return ErrorPostGramWidget(viewModel.exeption!);
+    }
+    if (viewModel.comments.isEmpty) {
       return const SizedBox.shrink();
     } else {
       return Column(
-        children: getComments(viewModel.commentsMap),
+        children: _getComments(viewModel),
       );
     }
   }
 
-  List<Widget> getComments(Map<CommentModel, CommentModel?> comments) {
+  List<Widget> _getComments(CommentsViewModel model) {
     List<Widget> result = [];
-    for (var comment in comments.keys) {
+    for (var comment in model.comments) {
       result.add(const Divider());
-      result.add(CommentViewWidget.create(comment, comments[comment]));
+      result.add(CommentViewWidget.create(comment.id));
     }
     return result;
+  }
+
+  static dynamic create(String postId) {
+    return ChangeNotifierProvider(
+      create: (BuildContext context) =>
+          CommentsViewModel(postId, context: context),
+      child: const CommentsViewWidget(),
+    );
   }
 }

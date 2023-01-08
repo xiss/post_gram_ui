@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:post_gram_ui/ui/widgets/roots/loader/loader_view_model.dart';
+import 'package:post_gram_ui/ui/widgets/roots/loader/loader_model.dart';
 import 'package:provider/provider.dart';
 
 class LoaderWidget extends StatelessWidget {
@@ -12,8 +12,8 @@ class LoaderWidget extends StatelessWidget {
     );
   }
 
-  static Widget create() => ChangeNotifierProvider<LoaderViewModel>(
-        create: (context) => LoaderViewModel(context: context),
+  static Widget create() => ChangeNotifierProvider<LoaderModel>(
+        create: (context) => LoaderModel(context: context),
         lazy: false,
         child: const LoaderWidget(),
       );

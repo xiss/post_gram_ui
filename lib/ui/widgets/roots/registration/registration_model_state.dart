@@ -1,4 +1,4 @@
-class RegistrationViewModelState {
+class RegistrationModelState {
   final String? password;
   final String? passwordRetry;
   final DateTime? birthDate = DateTime.now();
@@ -14,7 +14,7 @@ class RegistrationViewModelState {
   final String? errorEmail;
   final String? errorPassword;
 
-  RegistrationViewModelState({
+  RegistrationModelState({
     //this.birthDate,
     this.name,
     this.isPrivate,
@@ -30,7 +30,7 @@ class RegistrationViewModelState {
     this.errorPassword,
   });
 
-  RegistrationViewModelState copyWith({
+  RegistrationModelState copyWith({
     String? password,
     String? passwordRetry,
     DateTime? birthDate,
@@ -45,7 +45,7 @@ class RegistrationViewModelState {
     String? errorEmail,
     String? errorPassword,
   }) {
-    return RegistrationViewModelState(
+    return RegistrationModelState(
       password: password ?? this.password,
       passwordRetry: passwordRetry ?? this.passwordRetry,
       //birthDate: birthDate ?? this.birthDate,

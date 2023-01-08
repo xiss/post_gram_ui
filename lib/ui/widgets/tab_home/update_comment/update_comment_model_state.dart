@@ -1,25 +1,25 @@
-class UpdateCommentViewModelState {
+class UpdateCommentModelState {
   final String? body;
   final bool isLoading;
-  final String? errorText;
+  final Exception? exeption;
   final String? commentId;
 
-  UpdateCommentViewModelState({
+  UpdateCommentModelState({
     this.commentId,
     this.body,
-    this.errorText,
+    this.exeption,
     this.isLoading = false,
   });
 
-  UpdateCommentViewModelState copyWith({
+  UpdateCommentModelState copyWith({
     String? body,
     bool isLoading = false,
-    String? errorText,
+    Exception? exeption,
     String? commentId,
   }) {
-    return UpdateCommentViewModelState(
+    return UpdateCommentModelState(
       body: body ?? this.body,
-      errorText: errorText ?? this.errorText,
+      exeption: exeption ?? this.exeption,
       commentId: commentId ?? this.commentId,
       isLoading: isLoading,
     );

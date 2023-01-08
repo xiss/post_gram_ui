@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:post_gram_ui/data/services/auth_service.dart';
 import 'package:post_gram_ui/domain/exceptions.dart';
 import 'package:post_gram_ui/ui/navigation/app_navigator.dart';
-import 'package:post_gram_ui/ui/widgets/roots/auth/auth_view_model_state.dart';
+import 'package:post_gram_ui/ui/widgets/roots/auth/auth_model_state.dart';
 
-class AuthViewModel extends ChangeNotifier {
+class AuthModel extends ChangeNotifier {
   var loginController = TextEditingController();
   var passwordController = TextEditingController();
   final _authService = AuthService();
 
   BuildContext context;
-  AuthViewModel({required this.context}) {
+  AuthModel({required this.context}) {
     loginController.addListener(() {
       state = state.copyWith(login: loginController.text);
     });
@@ -19,12 +19,12 @@ class AuthViewModel extends ChangeNotifier {
     });
   }
 
-  var _state = const AuthViewModelState();
-  AuthViewModelState get state {
+  var _state = const AuthModelState();
+  AuthModelState get state {
     return _state;
   }
 
-  set state(AuthViewModelState value) {
+  set state(AuthModelState value) {
     _state = value;
     notifyListeners();
   }
@@ -34,7 +34,12 @@ class AuthViewModel extends ChangeNotifier {
         (state.password?.isNotEmpty ?? false);
   }
 
-  void login() async {
+  Future toRegistration() async {
+    await Navigator.of(context)
+        .pushNamed(NavigationRoutes.registration, arguments: null);
+  }
+
+  Future login() async {
     state = state.copyWith(isLoading: true);
     try {
       await _authService.clearDatabase();

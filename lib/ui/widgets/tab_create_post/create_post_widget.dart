@@ -1,6 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:post_gram_ui/ui/widgets/roots/create_post/create_post_view_model.dart';
+import 'package:post_gram_ui/ui/widgets/common/error_post_gram_widget.dart';
+import 'package:post_gram_ui/ui/widgets/common/image_preview_widget.dart';
+import 'package:post_gram_ui/ui/widgets/tab_create_post/create_post_view_model.dart';
 import 'package:provider/provider.dart';
 
 class CreatePostWidget extends StatelessWidget {
@@ -10,6 +11,11 @@ class CreatePostWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     CreatePostViewModel viewModel = context.watch<CreatePostViewModel>();
     const sizedBoxSpace = SizedBox(height: 24);
+
+    if (viewModel.state.exeption != null) {
+      return ErrorPostGramWidget(viewModel.state.exeption!);
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Flexible(
@@ -56,38 +62,15 @@ class CreatePostWidget extends StatelessWidget {
                   ),
                   if (viewModel.state.isLoading)
                     const CircularProgressIndicator(),
-                  if (viewModel.state.errorText != null)
-                    Text(
-                      viewModel.state.errorText!,
-                      style: const TextStyle(color: Colors.red),
-                    ),
                   if (viewModel.state.attachments.isNotEmpty)
-                    _getPreviews(viewModel.state.attachments)
+                    ImagePreviewWidget<String>(
+                        viewModel.state.attachments, viewModel.deletePhoto)
                 ],
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _getPreviews(List<String> imagePaths) {
-    List<Widget> list = [];
-
-    for (var i = 0; i < imagePaths.length; i++) {
-      list.add(Image(width: 100, image: FileImage(File(imagePaths[i]))));
-    }
-    GridView gridView = GridView(
-        shrinkWrap: true,
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-        children: list);
-
-    return Flexible(
-      fit: FlexFit.loose,
-      flex: 0,
-      child: gridView,
     );
   }
 
