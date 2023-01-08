@@ -11,7 +11,9 @@ import 'package:post_gram_ui/domain/models/like/update_like_model.dart';
 import 'package:post_gram_ui/domain/models/post/create_post_model.dart';
 import 'package:post_gram_ui/domain/models/post/post_model.dart';
 import 'package:post_gram_ui/domain/models/post/update_post_model.dart';
+import 'package:post_gram_ui/domain/models/subscription/create_subscription_model.dart';
 import 'package:post_gram_ui/domain/models/subscription/subscription_model.dart';
+import 'package:post_gram_ui/domain/models/subscription/update_subscription_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_create_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
 
@@ -31,6 +33,12 @@ abstract class ApiRepositoryBase {
 
   Future<List<PostModel>> getPosts(int take, int skip);
 
+  Future<CommentModel> getComment(String commentId);
+
+  Future<PostModel> getPost(String postId);
+
+  Future<List<UserModel>> getUsers();
+
   Future<dynamic> registerUser(UserCreateModel model);
 
   Future<MetadataModel> uploadFile({required File file});
@@ -47,6 +55,8 @@ abstract class ApiRepositoryBase {
 
   Future<String> createComment({required CreateCommentModel model});
 
+  Future<String> createSubscription({required CreateSubscriptionModel model});
+
   Future<String> createLike({required CreateLikeModel model});
 
   Future<CommentModel> updateComment({required UpdateCommentModel model});
@@ -54,6 +64,9 @@ abstract class ApiRepositoryBase {
   Future<LikeModel> updateLike({required UpdateLikeModel model});
 
   Future<PostModel> updatePost({required UpdatePostModel model});
+
+  Future<SubscriptionModel> updateSubscription(
+      {required UpdateSubscriptionModel model});
 
   Future<String> deleteComment({required String commentId});
 

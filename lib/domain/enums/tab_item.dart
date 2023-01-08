@@ -1,6 +1,6 @@
 enum TabItemEnum {
   home,
-  search,
+  users,
   createPost,
   profile,
 }

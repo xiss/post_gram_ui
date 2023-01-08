@@ -2,15 +2,15 @@
 DROP TABLE IF EXISTS t_Users;
 CREATE TABLE IF NOT EXISTS t_Users
 (
-    id text NOT NULL,
+    id text NOT NULL PRIMARY KEY,
     name text  NOT NULL,
     surname text  NOT NULL,
     patronymic text  NOT NULL,
     email text  NOT NULL,
     nickname text  NOT NULL,
     birthDate timestamp with time zone NOT NULL,
-    avatarId text,    
-    CONSTRAINT PK_Users PRIMARY KEY (id)    
+    isPrivate boolean NOT NULL, 
+    avatarId text          
 );
 
 -- Table: Avatars
@@ -113,13 +113,12 @@ CREATE TABLE IF NOT EXISTS t_Likes
 DROP TABLE IF EXISTS t_Subscriptions;
 CREATE TABLE IF NOT EXISTS t_Subscriptions
 (
-    id text NOT NULL,
+    id text NOT NULL PRIMARY KEY,
     slaveId text NOT NULL,
     masterId text NOT NULL,
     status boolean NOT NULL,
     created timestamp with time zone NOT NULL,
-    edited timestamp with time zone,
-    CONSTRAINT PK_Subscriptions PRIMARY KEY (id),
+    edited timestamp with time zone,    
     CONSTRAINT FK_Subscriptions_Users_MasterId FOREIGN KEY (masterId)
         REFERENCES t_Users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
