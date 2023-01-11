@@ -5,9 +5,7 @@ import 'package:post_gram_ui/ui/navigation/tab_enums.dart';
 class AppViewModel extends ChangeNotifier {
   BuildContext context;
 
-  AppViewModel({required this.context}) {
-    _asyncInit();
-  }
+  AppViewModel({required this.context});
 
   final Map<TabItemEnum, GlobalKey<NavigatorState>> navigationKeys = {
     TabItemEnum.createPost: GlobalKey<NavigatorState>(),
@@ -28,5 +26,7 @@ class AppViewModel extends ChangeNotifier {
     }
   }
 
-  Future _asyncInit() async {}
+  Future reload() async {
+    notifyListeners();
+  }
 }

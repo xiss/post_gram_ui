@@ -124,13 +124,15 @@ class PostViewWidget extends StatelessWidget {
     return result;
   }
 
-  static dynamic create(String postId,
-      [bool generateLinkToDetailedView = true]) {
+  static dynamic create(
+    String postId,
+    bool inDetailedView,
+  ) {
     return ChangeNotifierProvider(
       create: (BuildContext context) => PostViewModel(
-        postId,
-        generateLinkToDetailedView,
         context: context,
+        inDetailedView: inDetailedView,
+        postId: postId,
       ),
       child: const PostViewWidget(),
     );

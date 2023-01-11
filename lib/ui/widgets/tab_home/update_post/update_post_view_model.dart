@@ -112,7 +112,6 @@ class UpdatePostViewModel extends ChangeNotifier {
           state = state?.copyWith(exeption: e);
         }
       }
-      notifyListeners();
       Navigator.of(context).pop();
     }
   }
@@ -132,8 +131,13 @@ class UpdatePostViewModel extends ChangeNotifier {
   }
 
   Future deletePost() async {
-    _postService.deletePost(_postId);
+    try {
+      await _postService.deletePost(_postId);
+    } on Exception catch (e) {
+      state = state?.copyWith(exeption: e);
+    }
+
     notifyListeners();
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(true);
   }
 }

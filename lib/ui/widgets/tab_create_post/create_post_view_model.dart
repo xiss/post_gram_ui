@@ -6,12 +6,15 @@ import 'package:post_gram_ui/data/services/post_service.dart';
 import 'package:post_gram_ui/domain/models/attachment/metadata_model.dart';
 import 'package:post_gram_ui/domain/models/post/create_post_model.dart';
 import 'package:post_gram_ui/ui/widgets/common/camera_widget.dart';
+import 'package:post_gram_ui/ui/widgets/roots/app/app_view_model.dart';
 import 'package:post_gram_ui/ui/widgets/tab_create_post/create_post_model_state.dart';
+import 'package:provider/provider.dart';
 
 class CreatePostViewModel extends ChangeNotifier {
   BuildContext context;
   final PostService _postService = PostService();
   final AttachmentService _attachmentService = AttachmentService();
+  AppViewModel? _appViewModel;
 
   TextEditingController bodyController = TextEditingController();
   TextEditingController headerController = TextEditingController();
@@ -23,6 +26,8 @@ class CreatePostViewModel extends ChangeNotifier {
     headerController.addListener(() {
       state = state.copyWith(header: headerController.text);
     });
+
+    _appViewModel = context.read<AppViewModel>();
   }
 
   CreatePostModelState _state = CreatePostModelState(attachments: []);
@@ -59,12 +64,9 @@ class CreatePostViewModel extends ChangeNotifier {
       } on Exception catch (e) {
         state = state.copyWith(exeption: e);
       }
-
-      //await _postService.syncPosts();
-      state = CreatePostModelState(attachments: []);
-      headerController.text = "";
-      bodyController.text = "";
+      _clearForm();
     }
+    _appViewModel?.notifyListeners();
     notifyListeners();
   }
 
@@ -85,5 +87,11 @@ class CreatePostViewModel extends ChangeNotifier {
   void deletePhoto(String photoPath) {
     state.attachments.remove(photoPath);
     notifyListeners();
+  }
+
+  void _clearForm() {
+    state = CreatePostModelState(attachments: []);
+    headerController.text = "";
+    bodyController.text = "";
   }
 }

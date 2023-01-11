@@ -28,7 +28,7 @@ class PostsViewWidget extends StatelessWidget {
             child: ListView.separated(
                 controller: viewModel.scrollController,
                 itemBuilder: (_, index) {
-                  return PostViewWidget.create(_posts[index].id);
+                  return PostViewWidget.create(_posts[index].id, false);
                 },
                 separatorBuilder: (_, __) => const Divider(),
                 itemCount: _posts.length),

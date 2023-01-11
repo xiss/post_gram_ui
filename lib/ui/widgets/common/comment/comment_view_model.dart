@@ -10,6 +10,7 @@ import 'package:post_gram_ui/domain/models/like/update_like_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
 import 'package:post_gram_ui/ui/navigation/tab_navigator_routes.dart';
 import 'package:post_gram_ui/ui/widgets/common/comments/comments_view_model.dart';
+import 'package:post_gram_ui/ui/widgets/tab_home/post_details/post_detail_model.dart';
 import 'package:provider/provider.dart';
 
 class CommentViewModel extends ChangeNotifier {
@@ -23,6 +24,9 @@ class CommentViewModel extends ChangeNotifier {
   String quote = "";
   Future<NetworkImage?>? avatar;
   UserModel? currentUser;
+  bool _disposed = false;
+  CommentsViewModel? _commentsViewModel;
+  PostDetailModel? _postDetailModel;
 
   CommentViewModel({
     required String commentId,
@@ -30,8 +34,10 @@ class CommentViewModel extends ChangeNotifier {
   }) : _comentId = commentId {
     _asyncInit();
 
-    CommentsViewModel postDetailModel = context.read<CommentsViewModel>();
-    postDetailModel.addListener(() async {
+    _commentsViewModel = context.read<CommentsViewModel>();
+    _postDetailModel = context.read<PostDetailModel>();
+
+    _commentsViewModel?.addListener(() async {
       await _asyncInit();
       notifyListeners();
     });
@@ -73,14 +79,18 @@ class CommentViewModel extends ChangeNotifier {
         comment?.body,
       ],
     );
-    notifyListeners();
+    _postDetailModel?.notifyListeners();
   }
 
   Future updateComment() async {
-    await Navigator.of(context).pushNamed(
+    var isDeleted = await Navigator.of(context).pushNamed(
       TabNavigatorRoutes.updateComment,
       arguments: comment,
     );
+
+    if ((isDeleted is bool) == true) {
+      _postDetailModel?.notifyListeners();
+    }
 
     await _asyncInit();
   }
@@ -108,5 +118,18 @@ class CommentViewModel extends ChangeNotifier {
     }
 
     await _asyncInit();
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
   }
 }

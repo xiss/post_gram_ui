@@ -95,7 +95,8 @@ class CommentViewWidget extends StatelessWidget {
 
   static dynamic create(String commentId) {
     return ChangeNotifierProvider(
-      create: (BuildContext context) => CommentViewModel(
+      key: Key(commentId),
+      create: (context) => CommentViewModel(
         commentId: commentId,
         context: context,
       ),

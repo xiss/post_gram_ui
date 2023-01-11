@@ -27,7 +27,7 @@ class UsersViewModel extends ChangeNotifier {
   }
 
   Future _acyncInit() async {
-    await _userService.syncUsers();
+    await _userService.syncUsers(); //TODO обработка ошибок
     await _userService.syncSubscriptions();
     users = await _userService.getSubscriptionsWithUsers();
     if (masterSubs) {

@@ -344,6 +344,7 @@ class PostService {
       String deletedPostId = await _apiRepository.deletePost(postId: postId);
       await _database.deleteById<Post>(deletedPostId);
       await _database.deleteRange<PostContent>({'postId': deletedPostId});
+
       return deletedPostId;
     } on DioError catch (e) {
       if (e.error is SocketException) {

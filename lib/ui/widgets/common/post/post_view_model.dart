@@ -9,6 +9,9 @@ import 'package:post_gram_ui/domain/models/like/update_like_model.dart';
 import 'package:post_gram_ui/domain/models/post/post_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_model.dart';
 import 'package:post_gram_ui/ui/navigation/tab_navigator_routes.dart';
+import 'package:post_gram_ui/ui/widgets/roots/app/app_view_model.dart';
+import 'package:post_gram_ui/ui/widgets/tab_home/post_details/post_detail_model.dart';
+import 'package:provider/provider.dart';
 
 class PostViewModel extends ChangeNotifier {
   final AttachmentService _attachmentService = AttachmentService();
@@ -16,13 +19,25 @@ class PostViewModel extends ChangeNotifier {
   final PostService _postService = PostService();
   final BuildContext context;
   final String _postId;
-  final bool _generateLinkToDetailedView;
+  final bool _inDetailedView;
+  AppViewModel? _appViewModel;
   int pager = 0;
   bool _disposed = false;
 
-  PostViewModel(this._postId, this._generateLinkToDetailedView,
-      {required this.context}) {
-    _acyncInit();
+  PostViewModel(
+      {required String postId,
+      required bool inDetailedView,
+      required this.context})
+      : _postId = postId,
+        _inDetailedView = inDetailedView {
+    _asyncInit();
+    if (_inDetailedView) {
+      PostDetailModel? postDetailModel = context.read<PostDetailModel>();
+      postDetailModel.addListener(() async {
+        await _asyncInit();
+      });
+    }
+    _appViewModel = context.read<AppViewModel>();
   }
 
   Exception? _exeption;
@@ -73,7 +88,7 @@ class PostViewModel extends ChangeNotifier {
     }
   }
 
-  Future _acyncInit() async {
+  Future _asyncInit() async {
     currentUser = await _userService.getCurrentUser();
     post = await _postService.getPost(_postId);
     if (post != null) {
@@ -94,16 +109,25 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toPostDetail() {
-    if (_generateLinkToDetailedView) {
-      Navigator.of(context)
+  Future toPostDetail() async {
+    if (!_inDetailedView) {
+      await Navigator.of(context)
           .pushNamed(TabNavigatorRoutes.postDetails, arguments: _postId);
+      await _asyncInit();
     }
   }
 
   Future updatePost() async {
-    Navigator.of(context)
+    var isDeleted = await Navigator.of(context)
         .pushNamed(TabNavigatorRoutes.updatePost, arguments: _postId);
+    if (isDeleted is bool) {
+      if (_inDetailedView) {
+        Navigator.of(context).pop();
+      }
+      await _appViewModel?.reload();
+    } else {
+      await _asyncInit();
+    }
   }
 
   Future createUpdateLike(bool isLike) async {

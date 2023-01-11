@@ -4,20 +4,17 @@ import 'package:post_gram_ui/data/services/post_service.dart';
 import 'package:post_gram_ui/domain/models/comment/comment_model.dart';
 import 'package:post_gram_ui/domain/models/post/post_model.dart';
 import 'package:post_gram_ui/ui/navigation/tab_navigator_routes.dart';
-import 'package:post_gram_ui/ui/widgets/common/comments/comments_view_model.dart';
 
 class PostDetailModel extends ChangeNotifier {
   final BuildContext context;
   final PostService _postService = PostService();
   final String postId;
-  CommentsViewModel? commentsViewModel;
 
   PostDetailModel({
     required this.context,
     required this.postId,
   }) {
     _acyncInit();
-    // commentsViewModel = context.read<CommentsViewModel>();
   }
 
   PostModel? _post;

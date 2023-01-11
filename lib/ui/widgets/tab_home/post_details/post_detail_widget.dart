@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:post_gram_ui/domain/models/post/post_model.dart';
-import 'package:post_gram_ui/ui/widgets/common/comments/comments_view_model.dart';
 import 'package:post_gram_ui/ui/widgets/common/comments/comments_view_widget.dart';
-import 'package:post_gram_ui/ui/widgets/common/post/post_view_model.dart';
 import 'package:post_gram_ui/ui/widgets/common/post/post_view_widget.dart';
 import 'package:post_gram_ui/ui/widgets/tab_home/post_details/post_detail_model.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +22,7 @@ class PostDetailWidget extends StatelessWidget {
       body: ListView(
         children: [
           postModel != null
-              ? PostViewWidget.create(postModel.id, false)
+              ? PostViewWidget.create(postModel.id, true)
               : const Center(
                   child: CircularProgressIndicator(),
                 ),
@@ -42,17 +40,8 @@ class PostDetailWidget extends StatelessWidget {
       postId = arg;
     }
 
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-            create: (context) =>
-                PostDetailModel(context: context, postId: postId)),
-        ChangeNotifierProvider(
-            create: (context) => CommentsViewModel(postId, context: context)),
-        ChangeNotifierProvider(
-            create: (context) =>
-                PostViewModel(postId, false, context: context)),
-      ],
+    return ChangeNotifierProvider(
+      create: (context) => PostDetailModel(context: context, postId: postId),
       child: const PostDetailWidget(),
     );
   }

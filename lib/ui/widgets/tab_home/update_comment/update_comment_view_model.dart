@@ -8,13 +8,19 @@ class UpdateCommentViewModel extends ChangeNotifier {
   BuildContext context;
   final PostService _postService = PostService();
   TextEditingController bodyController = TextEditingController();
+  //CommentsViewModel? _postDetailModel;
 
   UpdateCommentViewModel({
     required this.context,
     required CommentModel comment,
   }) {
     bodyController.text = comment.body;
-    state = state.copyWith(body: comment.body, commentId: comment.id);
+    state = state.copyWith(
+      body: comment.body,
+      commentId: comment.id,
+      postId: comment.postId,
+    );
+
     bodyController.addListener(
       () {
         state = state.copyWith(
@@ -23,6 +29,7 @@ class UpdateCommentViewModel extends ChangeNotifier {
         );
       },
     );
+    //_postDetailModel = context.read<CommentsViewModel>();
   }
 
   UpdateCommentModelState _state = UpdateCommentModelState();
@@ -42,6 +49,7 @@ class UpdateCommentViewModel extends ChangeNotifier {
   Future updateComment() async {
     String? body = state.body;
     String? commentId = state.commentId;
+
     if (body != null && commentId != null) {
       UpdateCommentModel model = UpdateCommentModel(
         newBody: body,
@@ -56,19 +64,20 @@ class UpdateCommentViewModel extends ChangeNotifier {
 
       Navigator.of(context).pop();
     }
-    //notifyListeners();
   }
 
   Future deleteComment() async {
     String? commentId = state.commentId;
-    if (commentId != null) {
+    String? postId = state.postId;
+    if (commentId != null && postId != null) {
       try {
         await _postService.deleteComment(commentId);
+        await _postService.syncPost(postId);
       } on Exception catch (e) {
         state = state.copyWith(exeption: e);
       }
 
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
     }
   }
 }

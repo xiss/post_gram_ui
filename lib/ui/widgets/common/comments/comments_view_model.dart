@@ -8,6 +8,7 @@ class CommentsViewModel extends ChangeNotifier {
   BuildContext context;
   final String _postId;
   final PostService _postService = PostService();
+  bool _disposed = false;
 
   CommentsViewModel(String postId, {required this.context}) : _postId = postId {
     _asyncInit();
@@ -15,7 +16,6 @@ class CommentsViewModel extends ChangeNotifier {
     PostDetailModel postDetailModel = context.read<PostDetailModel>();
     postDetailModel.addListener(() async {
       await _asyncInit();
-      notifyListeners();
     });
   }
 
@@ -43,8 +43,16 @@ class CommentsViewModel extends ChangeNotifier {
     }
   }
 
-  // Future rebuild() async {
-  //   await _acyncInit();
-  //   notifyListeners();
-  // }
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
 }
