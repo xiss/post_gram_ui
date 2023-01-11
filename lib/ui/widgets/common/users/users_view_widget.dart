@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:post_gram_ui/ui/widgets/common/error_post_gram_widget.dart';
 import 'package:post_gram_ui/ui/widgets/common/styles/font_styles.dart';
 import 'package:post_gram_ui/ui/widgets/common/users/users_view_model.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +36,11 @@ class UsersViewWidget extends StatelessWidget {
     UsersViewModel viewModel = context.watch<UsersViewModel>();
     Size size = MediaQuery.of(context).size;
     double widthName = size.width - 155;
+
+    if (viewModel.exeption != null) {
+      return ErrorPostGramWidget(viewModel.exeption!);
+    }
+
     if (viewModel.users.isEmpty) {
       return const SizedBox.shrink();
     } else {

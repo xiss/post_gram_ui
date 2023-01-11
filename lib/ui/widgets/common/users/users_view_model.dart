@@ -26,10 +26,22 @@ class UsersViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Exception? _exeption;
+  Exception? get exeption => _exeption;
+  set exeption(Exception? exeption) {
+    _exeption = exeption;
+    notifyListeners();
+  }
+
   Future _acyncInit() async {
-    await _userService.syncUsers(); //TODO обработка ошибок
-    await _userService.syncSubscriptions();
-    users = await _userService.getSubscriptionsWithUsers();
+    try {
+      await _userService.syncUsers();
+      await _userService.syncSubscriptions();
+      users = await _userService.getSubscriptionsWithUsers();
+    } on Exception catch (e) {
+      exeption = e;
+    }
+
     if (masterSubs) {
       users =
           users.where((element) => element.masterSubscription != null).toList();
@@ -39,7 +51,12 @@ class UsersViewModel extends ChangeNotifier {
   Future subscribe(UserSubscriptionsAvatarModel userDetails) async {
     CreateSubscriptionModel model =
         CreateSubscriptionModel(masterId: userDetails.user.id);
-    await _userService.createSubscription(model);
+    try {
+      await _userService.createSubscription(model);
+    } on Exception catch (e) {
+      exeption = e;
+    }
+
     await _acyncInit();
     notifyListeners();
   }
@@ -49,14 +66,24 @@ class UsersViewModel extends ChangeNotifier {
   }
 
   Future confirmSubscription(UserSubscriptionsAvatarModel userDetails) async {
-    await _updateSubscriptionStatus(userDetails, true);
+    try {
+      await _updateSubscriptionStatus(userDetails, true);
+    } on Exception catch (e) {
+      exeption = e;
+    }
+
     await _acyncInit();
     notifyListeners();
   }
 
   Future recallConfirmationSubscription(
       UserSubscriptionsAvatarModel userDetails) async {
-    await _updateSubscriptionStatus(userDetails, false);
+    try {
+      await _updateSubscriptionStatus(userDetails, false);
+    } on Exception catch (e) {
+      exeption = e;
+    }
+
     await _acyncInit();
     notifyListeners();
   }
@@ -67,8 +94,13 @@ class UsersViewModel extends ChangeNotifier {
     if (masterSubscriptionId != null) {
       UpdateSubscriptionModel model =
           UpdateSubscriptionModel(id: masterSubscriptionId, status: newStatus);
-      await _userService.updateSubscription(model);
-      await _userService.syncSubscriptions();
+
+      try {
+        await _userService.updateSubscription(model);
+        await _userService.syncSubscriptions();
+      } on Exception catch (e) {
+        exeption = e;
+      }
     }
   }
 
