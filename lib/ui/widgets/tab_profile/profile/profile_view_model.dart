@@ -119,4 +119,8 @@ class ProfileViewModel extends ChangeNotifier {
   void logout() async {
     await _authService.logout().then((value) => AppNavigator.toLoader());
   }
+
+  Future reload() async {
+    _appViewModel?.reload();
+  }
 }

@@ -129,6 +129,7 @@ class PostViewWidget extends StatelessWidget {
     bool inDetailedView,
   ) {
     return ChangeNotifierProvider(
+      key: Key(postId),
       create: (BuildContext context) => PostViewModel(
         context: context,
         inDetailedView: inDetailedView,

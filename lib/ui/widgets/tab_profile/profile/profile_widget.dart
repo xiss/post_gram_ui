@@ -22,6 +22,10 @@ class ProfileWidget extends StatelessWidget {
         title: const Text("Profile"),
         actions: [
           IconButton(
+            onPressed: viewModel.reload,
+            icon: const Icon(Icons.sync),
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
             onPressed: viewModel.logout,
           ),
