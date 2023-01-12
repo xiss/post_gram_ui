@@ -20,7 +20,8 @@ class PostsViewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     PostsViewModel viewModel = context.watch<PostsViewModel>();
     if (_posts.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+          child: Text("Posts not found. Subscribe for someone."));
     } else {
       return Column(
         children: [

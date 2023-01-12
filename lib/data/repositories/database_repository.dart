@@ -14,7 +14,7 @@ import 'package:post_gram_ui/domain/models/user/user.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseRepository {
-  static const String _databaseName = "postgram_db_v1.26.db";
+  static const String _databaseName = "postgram_db_v1.33.db";
   static const int _databaseVersion = 1;
   static bool _isInitialized = false;
   static String _path = "";
@@ -136,9 +136,8 @@ class DatabaseRepository {
       }
     });
 
-    var a = await _database.delete(_dbName(T),
+    return await _database.delete(_dbName(T),
         where: whereBuilder.join(' and '), whereArgs: whereArgs);
-    return a;
   }
 
   Future<int> createUpdate<T extends DbModelBase>(T model) async {

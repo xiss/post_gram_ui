@@ -11,6 +11,8 @@ import 'package:post_gram_ui/domain/models/user/user_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_subscriptions_avatar_model.dart';
 import 'package:post_gram_ui/ui/navigation/app_navigator.dart';
 import 'package:post_gram_ui/ui/widgets/common/camera_widget.dart';
+import 'package:post_gram_ui/ui/widgets/roots/app/app_view_model.dart';
+import 'package:provider/provider.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   BuildContext context;
@@ -18,6 +20,15 @@ class ProfileViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
   final AttachmentService _attachmentService = AttachmentService();
   List<UserSubscriptionsAvatarModel> subscriptionList = [];
+  AppViewModel? _appViewModel;
+
+  ProfileViewModel({required this.context}) {
+    _asyncInit();
+    _appViewModel = context.read<AppViewModel>();
+    _appViewModel?.addListener(() {
+      _asyncInit();
+    });
+  }
 
   String fullName = "";
   String birthDate = "";
@@ -44,10 +55,6 @@ class ProfileViewModel extends ChangeNotifier {
   set newAvatarFilePath(String? value) {
     _newAvatarFilePath = value;
     notifyListeners();
-  }
-
-  ProfileViewModel({required this.context}) {
-    _asyncInit();
   }
 
   Future changePhoto() async {

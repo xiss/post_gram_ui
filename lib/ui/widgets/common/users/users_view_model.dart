@@ -4,6 +4,8 @@ import 'package:post_gram_ui/data/services/user_service.dart';
 import 'package:post_gram_ui/domain/models/subscription/create_subscription_model.dart';
 import 'package:post_gram_ui/domain/models/subscription/update_subscription_model.dart';
 import 'package:post_gram_ui/domain/models/user/user_subscriptions_avatar_model.dart';
+import 'package:post_gram_ui/ui/widgets/roots/app/app_view_model.dart';
+import 'package:provider/provider.dart';
 
 class UsersViewModel extends ChangeNotifier {
   BuildContext context;
@@ -11,12 +13,14 @@ class UsersViewModel extends ChangeNotifier {
   final bool slaveSubs;
   final bool masterSubs;
   bool _disposed = false;
+  AppViewModel? _appViewModel;
 
   UsersViewModel(
       {required this.masterSubs,
       required this.slaveSubs,
       required this.context}) {
     _acyncInit();
+    _appViewModel = context.read<AppViewModel>();
   }
 
   List<UserSubscriptionsAvatarModel> _users = [];
@@ -58,7 +62,7 @@ class UsersViewModel extends ChangeNotifier {
     }
 
     await _acyncInit();
-    notifyListeners();
+    _appViewModel?.notifyListeners();
   }
 
   Future unsubscribe(UserSubscriptionsAvatarModel userDetails) async {
@@ -73,7 +77,6 @@ class UsersViewModel extends ChangeNotifier {
     }
 
     await _acyncInit();
-    notifyListeners();
   }
 
   Future recallConfirmationSubscription(
@@ -85,7 +88,6 @@ class UsersViewModel extends ChangeNotifier {
     }
 
     await _acyncInit();
-    notifyListeners();
   }
 
   Future _updateSubscriptionStatus(
