@@ -389,6 +389,7 @@ class PostService {
     for (Post post in posts) {
       result.add(await _converter.postToPostModel(post));
     }
+    result.sort((a, b) => a.created.compareTo(b.created));
 
     return result;
   }

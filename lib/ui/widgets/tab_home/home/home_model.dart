@@ -39,8 +39,4 @@ class HomeModel extends ChangeNotifier {
       exeption = e;
     }
   }
-
-  Future reload() async {
-    await _asyncInit();
-  }
 }

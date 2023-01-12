@@ -35,6 +35,8 @@ class UserService {
       result.add(await _converter.userToUserModel(user));
     }
 
+    result.sort((a, b) => a.name.compareTo(b.name));
+
     return result;
   }
 
@@ -222,6 +224,7 @@ class UserService {
                   subscription.masterId == user.id),
         )
     ];
+    result.sort((a, b) => a.user.name.compareTo(b.user.name));
 
     return result;
   }
