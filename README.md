@@ -1,16 +1,13 @@
 # post_gram_ui
 
-A new Flutter project.
+Educational application PostGram UI flatter mobile. It is flutter mobile client for api [PostGram](https://github.com/xiss/PostGram). It is maintain creation, editing and deleting of posts, comments, likes, users, subscriptions. Supports JWT authorization.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Main technologies used:
+- flatter: 3.0.0
+- provider: 6.0.4 
+- dio: 4.0.6
+- retrofit: 3.3.1
+- json_serializable: 6.5.4
+- json_annotation: 4.7.0
+- sqflite: 2.2.2 
+- camera: 0.10.0+5
